@@ -15,6 +15,7 @@ public partial class Map : Node
 		{
 			this.width = width;
 			this.height = height;
+			CreateMap();
 		}
 
 		/// <summary>
@@ -28,19 +29,84 @@ public partial class Map : Node
 			{
 				for(int col = 0; col < width; col++)
 				{
-					map[row, col] = new Cell(row, col); // !
+					map[row, col] = new Cell(col, row); // !
 
 					//DEBUG
-						Array values = Enum.GetValues(typeof(Piece));
-						Random random = new Random();
-						Piece randomBar = (Piece)values.GetValue(random.Next(values.Length));
-						map[row,col].PieceType = randomBar;
+					Array values = Enum.GetValues(typeof(Piece));
+					Random random = new Random();
+					Piece randomBar = (Piece)values.GetValue(random.Next(values.Length));
+					map[row,col].PieceType = randomBar;
 
 				}
 			}
 		}
 
+		/// <summary>
+		/// Imposta il tipo di cella alle coordinate specificate
+		/// </summary>
+		public void SetCell(int x, int z, CellObjectType cellObjectType) 
+		{
+			map[z, x].CellObjectType = cellObjectType;
+			map[z, x].IsTaken = false;
+		}
+
+		public void SetCell(float x, float z, CellObjectType cellObjectType)
+		{
+			SetCell((int) x, (int) z, cellObjectType);
+		}
+
+		/// <summary>
+		/// Restituisce se la cella è occupata
+		/// </summary>
+		public bool IsCellTaken(int x, int z)
+		{
+			return map[z, x].IsTaken;
+		}
+
+		public bool IsCellTaken(float x, float z) 
+		{
+			return map[(int) z, (int) x].IsTaken;
+		}
+
+		/// <summary>
+		/// Restituisce se la cella è valida
+		/// </summary>
+		public bool IsCellValid(float x, float z)
+		{
+			if (x >= width || x < 0 || z >= height || z < 0)
+				return false;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Restituisce la cella nelle coordinate specificate, se valida
+		/// </summary>
+		public Cell GetCell(int x, int z)
+		{
+			if (IsCellValid(x, z) == false)
+				return null;
+
+			return map[z, x];
+		}
+
+		public Cell GetCell(float x, float z) 
+		{
+			return GetCell((int) x, (int) z);
+		}
+		
 		// Debug
+		public int CalculateIndexFromCoordinates(int x, int z)
+		{
+			return x + z * width;
+		}
+
+		public float CalculateIndexFromCoordinates(float x, float z)
+		{
+			return (int) x + (int) z * width;
+		}
+
+		
 		public void PrintMapConsole()
 		{
 			string s = "";
@@ -48,19 +114,17 @@ public partial class Map : Node
 			{
 				for (int j = 0; j < height; j++)
 				{
-					s+=map[i,j].PieceType;
+					string elem = "";
+					elem = map[i,j].CellObjectType.ToString();
+					s += elem[0];
 				}
 				s+="\n";
 			}
 			GD.Print(s);
-
-			GD.Print(map[3,5].PieceType);	
-			GD.Print(map[3,5].X);
-			GD.Print(map[3,5].Z);
-			
 		}
 
 	}
+	
 	/// <summary>
 	/// La cella che andrà a formare la griglia
 	/// </summary>
@@ -125,10 +189,12 @@ public partial class Map : Node
 	{
 
 		// DEBUG
-			GameMap map = new GameMap(8,8);
-			map.CreateMap();
-		
-			map.PrintMapConsole();
+		GameMap map = new GameMap(8,8);
+		map.CreateMap();
+		map.PrintMapConsole();
+
+		map.SetCell(3,5, CellObjectType.Obstacle);
+		map.PrintMapConsole();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

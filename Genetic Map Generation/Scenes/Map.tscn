@@ -1,3 +1,6 @@
-[gd_scene format=3 uid="uid://pyaoc5y737jm"]
+[gd_scene load_steps=2 format=3 uid="uid://cvfqnm4w4w3xp"]
 
-[node name="Node2D" type="Node2D"]
+[ext_resource type="Script" path="res://Scripts/Map.cs" id="1_l8jeg"]
+
+[node name="Cell" type="Node"]
+script = ExtResource("1_l8jeg")
