@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvfqnm4w4w3xp"]
+
+[ext_resource type="Script" path="res://Map.cs" id="1_q048g"]
+
+[node name="Cell" type="Node"]
+script = ExtResource("1_q048g")
