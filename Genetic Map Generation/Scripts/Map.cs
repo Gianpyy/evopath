@@ -1,6 +1,6 @@
 using Godot;
 using System;
-using System.Diagnostics;
+using Vector3 = Godot.Vector3;
 
 public partial class Map : Node
 {
@@ -101,11 +101,18 @@ public partial class Map : Node
 			return x + z * width;
 		}
 
-		public float CalculateIndexFromCoordinates(float x, float z)
+		public int CalculateIndexFromCoordinates(float x, float z)
 		{
 			return (int) x + (int) z * width;
 		}
 
+		public Vector3 CalculateCoordinatesFromIndex(int index)
+		{
+			int x = index % width;
+			int z = index / width;
+
+			return new Vector3(x, 0, z);
+		}
 		
 		public void PrintMapConsole()
 		{
@@ -187,13 +194,25 @@ public partial class Map : Node
 	
 	public override void _Ready()
 	{
-
 		// DEBUG
-		GameMap map = new GameMap(8,8);
+		int width = 8;
+		int height = 8;
+		
+		GameMap map = new GameMap(width,height);
+
+		GD.Print("Creo la mappa vuota");
 		map.CreateMap();
 		map.PrintMapConsole();
 
-		map.SetCell(3,5, CellObjectType.Obstacle);
+		
+
+		Vector3 startPos = new Vector3(0,0,3);
+		Vector3 exitPos = new Vector3(7,0,3);
+
+		GD.Print("Creo la candidate map con gli ostacoli...");
+
+		CandidateMap candidateMap = new CandidateMap(map,5);
+		candidateMap.FillBoardWithPieces(startPos,exitPos,map,width,height);
 		map.PrintMapConsole();
 	}
 

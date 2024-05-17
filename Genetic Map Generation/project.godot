@@ -18,3 +18,10 @@ config/icon="res://icon.svg"
 [dotnet]
 
 project/assembly_name="Genetic Map Generation"
+
+[file_customization]
+
+folder_colors={
+"res://Scenes/": "pink",
+"res://Scripts/": "blue"
+}
