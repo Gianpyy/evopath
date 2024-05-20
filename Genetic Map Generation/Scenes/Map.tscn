@@ -1,6 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://cvfqnm4w4w3xp"]
 
-[ext_resource type="Script" path="res://Scripts/Map.cs" id="1_l8jeg"]
+[ext_resource type="Script" path="res://Scripts/MapGenerator.cs" id="1_hnnjq"]
 
-[node name="Cell" type="Node"]
-script = ExtResource("1_l8jeg")
+[node name="MapGenerator" type="Node"]
+script = ExtResource("1_hnnjq")
+width = 8
+height = 8
+numberOfOstacles = 5
+startEdge = 3
+exitEdge = 1

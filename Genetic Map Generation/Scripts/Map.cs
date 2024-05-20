@@ -11,7 +11,10 @@ public partial class Map : Node
 
 		private Cell[,] map;
 
-		public GameMap(int width, int height)
+        public int Width { get => width; set => width = value; }
+        public int Height { get => height; set => height = value; }
+
+        public GameMap(int width, int height)
 		{
 			this.width = width;
 			this.height = height;
@@ -114,6 +117,8 @@ public partial class Map : Node
 			return new Vector3(x, 0, z);
 		}
 		
+		// DEBUG
+		// Stampa la mappa nella console di debug
 		public void PrintMapConsole()
 		{
 			string s = "";
@@ -188,32 +193,13 @@ public partial class Map : Node
 		Road,
 		Obstacle,
 		Start,
-		Exit
+		Xit //Exit si chiama Xit per differenziarlo da Empty
 	}
 	
 	
 	public override void _Ready()
 	{
-		// DEBUG
-		int width = 8;
-		int height = 8;
 		
-		GameMap map = new GameMap(width,height);
-
-		GD.Print("Creo la mappa vuota");
-		map.CreateMap();
-		map.PrintMapConsole();
-
-		
-
-		Vector3 startPos = new Vector3(0,0,3);
-		Vector3 exitPos = new Vector3(7,0,3);
-
-		GD.Print("Creo la candidate map con gli ostacoli...");
-
-		CandidateMap candidateMap = new CandidateMap(map,5);
-		candidateMap.FillBoardWithPieces(startPos,exitPos,map,width,height);
-		map.PrintMapConsole();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
