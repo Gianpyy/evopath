@@ -12,13 +12,13 @@ public partial class MapGenerator : Node
 	[Export]
 	public Direction startEdge, exitEdge;
 
-	Map.GameMap map;
+	Map map;
 	private Vector3 startPosition, exitPosition;
 
 	public override void _Ready() 
 	{
 		// DEBUG
-		map = new Map.GameMap(width,height);
+		map = new Map(width,height);
 
 		GD.Print("Creo la mappa vuota");
 		map.CreateMap();
@@ -26,7 +26,7 @@ public partial class MapGenerator : Node
 
 
 		GD.Print("Imposto casualmente entrata ed uscita...");
-		MapHelper.RandomlyChooseAndSetStartExit(map, ref startPosition, ref exitPosition, randomPlacement, startEdge, exitEdge);
+		MapHelper.RandomlyChooseAndSetStartExit(map, ref startPosition, ref exitPosition, false, Direction.Up, Direction.Right);
 		map.PrintMapConsole();
 
 		GD.Print("Creo la candidate map con gli ostacoli...");

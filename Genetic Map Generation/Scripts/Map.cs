@@ -2,210 +2,222 @@ using Godot;
 using System;
 using Vector3 = Godot.Vector3;
 
-public partial class Map : Node
+public class Map
 {
+	private int width, height;
 
-	public class GameMap
+	private Cell[,] map;
+
+	public int Width { get => width; set => width = value; }
+	public int Height { get => height; set => height = value; }
+
+	public Map(int width, int height)
 	{
-		private int width, height;
-
-		private Cell[,] map;
-
-        public int Width { get => width; set => width = value; }
-        public int Height { get => height; set => height = value; }
-
-        public GameMap(int width, int height)
-		{
-			this.width = width;
-			this.height = height;
-			CreateMap();
-		}
-
-		/// <summary>
-		/// Crea la mappa, costruendo la matrice e settando le Celle che la andranno a formare
-		/// </summary>
-		public void CreateMap()
-		{
-			map = new Cell[height, width];
-
-			for(int row = 0; row < height; row++)
-			{
-				for(int col = 0; col < width; col++)
-				{
-					map[row, col] = new Cell(col, row); // !
-
-					//DEBUG
-					Array values = Enum.GetValues(typeof(Piece));
-					Random random = new Random();
-					Piece randomBar = (Piece)values.GetValue(random.Next(values.Length));
-					map[row,col].PieceType = randomBar;
-
-				}
-			}
-		}
-
-		/// <summary>
-		/// Imposta il tipo di cella alle coordinate specificate
-		/// </summary>
-		public void SetCell(int x, int z, CellObjectType cellObjectType) 
-		{
-			map[z, x].CellObjectType = cellObjectType;
-			map[z, x].IsTaken = false;
-		}
-
-		public void SetCell(float x, float z, CellObjectType cellObjectType)
-		{
-			SetCell((int) x, (int) z, cellObjectType);
-		}
-
-		/// <summary>
-		/// Restituisce se la cella è occupata
-		/// </summary>
-		public bool IsCellTaken(int x, int z)
-		{
-			return map[z, x].IsTaken;
-		}
-
-		public bool IsCellTaken(float x, float z) 
-		{
-			return map[(int) z, (int) x].IsTaken;
-		}
-
-		/// <summary>
-		/// Restituisce se la cella è valida
-		/// </summary>
-		public bool IsCellValid(float x, float z)
-		{
-			if (x >= width || x < 0 || z >= height || z < 0)
-				return false;
-
-			return true;
-		}
-
-		/// <summary>
-		/// Restituisce la cella nelle coordinate specificate, se valida
-		/// </summary>
-		public Cell GetCell(int x, int z)
-		{
-			if (IsCellValid(x, z) == false)
-				return null;
-
-			return map[z, x];
-		}
-
-		public Cell GetCell(float x, float z) 
-		{
-			return GetCell((int) x, (int) z);
-		}
-		
-		// Debug
-		public int CalculateIndexFromCoordinates(int x, int z)
-		{
-			return x + z * width;
-		}
-
-		public int CalculateIndexFromCoordinates(float x, float z)
-		{
-			return (int) x + (int) z * width;
-		}
-
-		public Vector3 CalculateCoordinatesFromIndex(int index)
-		{
-			int x = index % width;
-			int z = index / width;
-
-			return new Vector3(x, 0, z);
-		}
-		
-		// DEBUG
-		// Stampa la mappa nella console di debug
-		public void PrintMapConsole()
-		{
-			string s = "";
-			for (int i = 0; i < width; i++)
-			{
-				for (int j = 0; j < height; j++)
-				{
-					string elem = "";
-					elem = map[i,j].CellObjectType.ToString();
-					s += elem[0];
-				}
-				s+="\n";
-			}
-			GD.Print(s);
-		}
-
+		this.width = width;
+		this.height = height;
+		CreateMap();
 	}
-	
+
 	/// <summary>
-	/// La cella che andrà a formare la griglia
+	/// Crea la mappa, costruendo la matrice e settando le Celle che la andranno a formare
 	/// </summary>
-	public class Cell
+	public void CreateMap()
 	{
-		// Posizione della cella nella griglia
-		private int x, z;
+		map = new Cell[height, width];
 
-		// Se la cella è occupata -> true
-		private bool isTaken;
-
-		// Il tipo di cella sulla griglia
-		private CellObjectType cellObjectType;
-
-		// Debug
-		private Piece pieceType;
-
-
-		public Cell(int x, int z)
+		for(int row = 0; row < height; row++)
 		{
-			this.x = x;
-			this.z = z;
+			for(int col = 0; col < width; col++)
+			{
+				map[row, col] = new Cell(col, row); // !
 
-			isTaken = false;
-			cellObjectType = CellObjectType.Empty;
+				//DEBUG
+				Array values = Enum.GetValues(typeof(Piece));
+				Random random = new Random();
+				Piece randomBar = (Piece)values.GetValue(random.Next(values.Length));
+				map[row,col].PieceType = randomBar;
 
+			}
 		}
+	}
 
+	/// <summary>
+	/// Imposta il tipo di cella alle coordinate specificate
+	/// </summary>
+	public void SetCell(int x, int z, CellObjectType cellObjectType) 
+	{
+		map[z, x].CellObjectType = cellObjectType;
+		map[z, x].IsTaken = false;
+	}
 
+	public void SetCell(float x, float z, CellObjectType cellObjectType)
+	{
+		SetCell((int) x, (int) z, cellObjectType);
+	}
 
-		// Setters e Getters
-        public int X { get => x;}
-        public int Z { get => z;}
-        public bool IsTaken { get => isTaken; set => isTaken = value; }
-        public CellObjectType CellObjectType { get => cellObjectType; set => cellObjectType = value; }
-		public Piece PieceType { get => pieceType; set => pieceType = value; }
-		
-        
-    }
+	/// <summary>
+	/// Restituisce se la cella è occupata
+	/// </summary>
+	public bool IsCellTaken(int x, int z)
+	{
+		return map[z, x].IsTaken;
+	}
 
+	public bool IsCellTaken(float x, float z) 
+	{
+		return map[(int) z, (int) x].IsTaken;
+	}
+
+	/// <summary>
+	/// Restituisce se la cella è valida
+	/// </summary>
+	public bool IsCellValid(float x, float z)
+	{
+		if (x >= width || x < 0 || z >= height || z < 0)
+			return false;
+
+		return true;
+	}
+
+	/// <summary>
+	/// Restituisce la cella nelle coordinate specificate, se valida
+	/// </summary>
+	public Cell GetCell(int x, int z)
+	{
+		if (IsCellValid(x, z) == false)
+			return null;
+
+		return map[z, x];
+	}
+
+	public Cell GetCell(float x, float z) 
+	{
+		return GetCell((int) x, (int) z);
+	}
+	
 	// Debug
-	public enum Piece
+	public int CalculateIndexFromCoordinates(int x, int z)
 	{
-		R,
-		P,
-		Q,
-		K
-
-	}
-	// Il tipo della cella, può essere un ostacolo, una strada ecc.
-	public enum CellObjectType
-	{
-		Empty,
-		Road,
-		Obstacle,
-		Start,
-		Xit //Exit si chiama Xit per differenziarlo da Empty
-	}
-	
-	
-	public override void _Ready()
-	{
-		
+		return x + z * width;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public int CalculateIndexFromCoordinates(float x, float z)
 	{
+		return (int) x + (int) z * width;
+	}
+
+	public Vector3 CalculateCoordinatesFromIndex(int index)
+	{
+		int x = index % width;
+		int z = index / width;
+
+		return new Vector3(x, 0, z);
+	}
+	
+	// DEBUG
+	// Stampa la mappa nella console di debug
+	public void PrintMapConsole()
+	{
+		string s = "";
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                //char elem = map[i, j].CellObjectType.ToString()[0];
+                switch (map[i, j].CellObjectType)
+                {
+                    case CellObjectType.Empty: // Empty
+                        s += "[color=gray]E[/color] ";
+                        break;
+                    case CellObjectType.Road: // Road
+                        s += "[color=blue]R[/color] ";
+                        break;
+                    case CellObjectType.Obstacle: // Obstacle
+                        s += "[color=red]O[/color] ";
+                        break;
+                    case CellObjectType.Start: // Start
+                        s += "[color=green]S[/color] ";
+                        break;
+                    case CellObjectType.Exit: // Exit
+                        s += "[color=yellow]X[/color] ";
+                        break;
+					case CellObjectType.Knight: // Knight Debug
+						s += "[color=violet]K[/color] ";
+					break;
+                    
+                }
+            }
+            s += "\n";
+        }
+
+        GD.PrintRich(s);
 	}
 
 }
+
+/// <summary>
+/// La cella che andrà a formare la griglia
+/// </summary>
+public class Cell
+{
+	// Posizione della cella nella griglia
+	private int x, z;
+
+	// Se la cella è occupata -> true
+	private bool isTaken;
+
+	// Il tipo di cella sulla griglia
+	private CellObjectType cellObjectType;
+
+	// Debug
+	private Piece pieceType;
+
+
+	public Cell(int x, int z)
+	{
+		this.x = x;
+		this.z = z;
+
+		isTaken = false;
+		cellObjectType = CellObjectType.Empty;
+
+	}
+
+
+
+	// Setters e Getters
+	public int X { get => x;}
+	public int Z { get => z;}
+	public bool IsTaken { get => isTaken; set => isTaken = value; }
+	public CellObjectType CellObjectType { get => cellObjectType; set => cellObjectType = value; }
+	public Piece PieceType { get => pieceType; set => pieceType = value; }
+	
+	
+}
+
+// Il tipo della cella, può essere un ostacolo, una strada ecc.
+public enum CellObjectType
+{
+	Empty,
+	Road,
+	Obstacle,
+	Knight, // Debug
+	Start,
+	Exit
+}
+
+
+// Debug
+public enum Piece
+{
+	R,
+	P,
+	Q,
+	K
+
+}
+
+
+
+
 

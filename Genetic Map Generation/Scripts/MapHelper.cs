@@ -13,7 +13,7 @@ public static class MapHelper
 	/// <param name="randomPlacement">Se il bordo di entrata ed uscita deve essere selezionato casualmente</param>
 	/// <param name="startPositionEdge">Il bordo da cui verrà scelta l'entrata. Default: sinistra</param>
 	/// <param name="exitPositionEdge">Il bordo da cui verrà scelta l'uscita. Default: destra</param>
-	public static void RandomlyChooseAndSetStartExit(Map.GameMap grid, ref Vector3 startPosition, ref Vector3 exitPosition, bool randomPlacement, Direction startPositionEdge = Direction.Left, Direction exitPositionEdge = Direction.Right) 
+	public static void RandomlyChooseAndSetStartExit(Map grid, ref Vector3 startPosition, ref Vector3 exitPosition, bool randomPlacement, Direction startPositionEdge = Direction.Left, Direction exitPositionEdge = Direction.Right) 
 	{
 		if (randomPlacement)
 		{
@@ -25,13 +25,13 @@ public static class MapHelper
 			startPosition = RandomlyChoosePositionOnEdge(grid, startPosition, startPositionEdge);
 			exitPosition = RandomlyChoosePositionOnEdge(grid, exitPosition, exitPositionEdge);
 		}
-		grid.SetCell(startPosition.X, startPosition.Z, Map.CellObjectType.Start);
-		grid.SetCell(exitPosition.X, exitPosition.Z, Map.CellObjectType.Xit);
+		grid.SetCell(startPosition.X, startPosition.Z, CellObjectType.Start);
+		grid.SetCell(exitPosition.X, exitPosition.Z, CellObjectType.Exit);
 	}
 
 
 	// Sceglie casualmente la posizione di entrata/uscita sul bordo passato come parametro. Di default, il bordo è scelto casualmente.
-	private static Vector3 RandomlyChoosePositionOnEdge(Map.GameMap grid, Vector3 position, Direction direction = Direction.None)
+	private static Vector3 RandomlyChoosePositionOnEdge(Map grid, Vector3 position, Direction direction = Direction.None)
 	{
 		Random rand = new Random();
 		if (direction == Direction.None)

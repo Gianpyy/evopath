@@ -8,7 +8,7 @@ using Vector3 = Godot.Vector3;
 public class CandidateMap
 {
 	// Griglia associata alla mappa candidata
-	public Map.GameMap grid;
+	public Map grid;
 	// Array degli ostacoli ottenuto normalizzando la griglia. griglia -> array
 	private bool[] obstacles = null;
 	// Inizio e fine del percorso
@@ -19,7 +19,7 @@ public class CandidateMap
 	private List<KnightPiece> knightPiecesList = new List<KnightPiece>();
 
 
-	public CandidateMap(Map.GameMap grid, int nPieces)
+	public CandidateMap(Map grid, int nPieces)
 	{
 		this.grid = grid;
 		this.nPieces = nPieces;
@@ -37,6 +37,8 @@ public class CandidateMap
 		exitPoint = exitPos;
 
 		RandomlyPlaceKnightPieces(nPieces);
+
+		PlaceKnightObstacles();
 	}
 
 	/// <summary>
@@ -91,20 +93,54 @@ public class CandidateMap
 		}
 	}
 
+	private void PlaceObstaclesForKnight(KnightPiece knight)
+	{
+		foreach(Vector3 position in KnightPiece.listOfPossibleMoves)
+		{
+			Vector3 newPosition = knight.Position + position;
+
+			if(grid.IsCellValid(newPosition.X, newPosition.Z) && CheckObstacleAtPosition(newPosition))
+			{
+				obstacles[grid.CalculateIndexFromCoordinates(newPosition.X,newPosition.Z)] = true;
+			}
+		}
+	}
+
+	private void PlaceKnightObstacles()
+	{
+		foreach(KnightPiece knight in knightPiecesList)
+		{
+			PlaceObstaclesForKnight(knight);
+		}
+	}
+
 	//Setters e Getters
-	public Map.GameMap Grid {get => grid;}
+	public Map Grid {get => grid;}
     public bool[] Obstacles { get => obstacles;}
 
 	//Debug
-	public void FillBoardWithPieces(Vector3 startPos,Vector3 exitPos,Map.GameMap grid, int width, int height)
+	public void FillBoardWithPieces(Vector3 startPos,Vector3 exitPos,Map grid, int width, int height)
 	{
 		obstacles = new bool[width*height];
 
 		CreateCandidateMap(startPos,exitPos);
 
+		
+
+		for(int i = 0;i < obstacles.Length; i++)
+		{
+			if(obstacles[i])
+			{
+				Vector3 pos = grid.CalculateCoordinatesFromIndex(i);
+				grid.SetCell(pos.X,pos.Z,CellObjectType.Obstacle);
+			}
+		}
+
 		foreach(KnightPiece k in knightPiecesList)
 		{
-			grid.SetCell(k.Position.X,k.Position.Z,Map.CellObjectType.Obstacle);
+			grid.SetCell(k.Position.X, k.Position.Z, CellObjectType.Knight);
 		}
 	}
+
+
 }
