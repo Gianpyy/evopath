@@ -13,7 +13,7 @@ public partial class MapGenerator : Node
 	public Direction startEdge, exitEdge;
 
 	Map map;
-	private Vector3 startPosition, exitPosition;
+	private Vector2 startPosition, exitPosition;
 
 	public override void _Ready() 
 	{

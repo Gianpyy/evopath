@@ -1,6 +1,6 @@
 using Godot;
 using System;
-using Vector3 = Godot.Vector3;
+using Vector2 = Godot.Vector2;
 
 public static class MapHelper
 {
@@ -13,7 +13,7 @@ public static class MapHelper
 	/// <param name="randomPlacement">Se il bordo di entrata ed uscita deve essere selezionato casualmente</param>
 	/// <param name="startPositionEdge">Il bordo da cui verrà scelta l'entrata. Default: sinistra</param>
 	/// <param name="exitPositionEdge">Il bordo da cui verrà scelta l'uscita. Default: destra</param>
-	public static void RandomlyChooseAndSetStartExit(Map grid, ref Vector3 startPosition, ref Vector3 exitPosition, bool randomPlacement, Direction startPositionEdge = Direction.Left, Direction exitPositionEdge = Direction.Right) 
+	public static void RandomlyChooseAndSetStartExit(Map grid, ref Vector2 startPosition, ref Vector2 exitPosition, bool randomPlacement, Direction startPositionEdge = Direction.Left, Direction exitPositionEdge = Direction.Right) 
 	{
 		if (randomPlacement)
 		{
@@ -25,13 +25,13 @@ public static class MapHelper
 			startPosition = RandomlyChoosePositionOnEdge(grid, startPosition, startPositionEdge);
 			exitPosition = RandomlyChoosePositionOnEdge(grid, exitPosition, exitPositionEdge);
 		}
-		grid.SetCell(startPosition.X, startPosition.Z, CellObjectType.Start);
-		grid.SetCell(exitPosition.X, exitPosition.Z, CellObjectType.Exit);
+		grid.SetCell(startPosition.X, startPosition.Y, CellObjectType.Start);
+		grid.SetCell(exitPosition.X, exitPosition.Y, CellObjectType.Exit);
 	}
 
 
 	// Sceglie casualmente la posizione di entrata/uscita sul bordo passato come parametro. Di default, il bordo è scelto casualmente.
-	private static Vector3 RandomlyChoosePositionOnEdge(Map grid, Vector3 position, Direction direction = Direction.None)
+	private static Vector2 RandomlyChoosePositionOnEdge(Map grid, Vector2 position, Direction direction = Direction.None)
 	{
 		Random rand = new Random();
 		if (direction == Direction.None)
@@ -39,34 +39,34 @@ public static class MapHelper
 			direction = (Direction) rand.Next(0,5);
 		}
 
-		Vector3 finalPosition = Vector3.Zero;
+		Vector2 finalPosition = Vector2.Zero;
 		switch (direction)
 		{
 			case Direction.Right:
 				do
 				{
-					finalPosition = new Vector3(grid.Width - 1, 0, rand.Next(0, grid.Height));
+					finalPosition = new Vector2(grid.Width - 1, rand.Next(0, grid.Height));
 				} while(finalPosition.DistanceTo(position) <= 1);
 				break;
 
 			case Direction.Left:
 				do
 				{
-					finalPosition = new Vector3(0 , 0, rand.Next(0, grid.Height));
+					finalPosition = new Vector2(0 , rand.Next(0, grid.Height));
 				} while(finalPosition.DistanceTo(position) <= 1);
 				break;
 
 			case Direction.Up:
 				do
 				{
-					finalPosition = new Vector3(rand.Next(0, grid.Width), 0, 0);
+					finalPosition = new Vector2(rand.Next(0, grid.Width), 0);
 				} while(finalPosition.DistanceTo(position) <= 1);
 				break;
 
 			case Direction.Down:
 				do
 				{
-					finalPosition = new Vector3(rand.Next(0, grid.Width), 0, grid.Height - 1);
+					finalPosition = new Vector2(rand.Next(0, grid.Width), grid.Height - 1);
 				} while(finalPosition.DistanceTo(position) <= 1);
 				break;
 			

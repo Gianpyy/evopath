@@ -1,6 +1,6 @@
 using Godot;
 using System;
-using Vector3 = Godot.Vector3;
+using Vector2 = Godot.Vector2;
 
 public class Map
 {
@@ -106,12 +106,12 @@ public class Map
 		return (int) x + (int) z * width;
 	}
 
-	public Vector3 CalculateCoordinatesFromIndex(int index)
+	public Vector2 CalculateCoordinatesFromIndex(int index)
 	{
 		int x = index % width;
 		int z = index / width;
 
-		return new Vector3(x, 0, z);
+		return new Vector2(x, z);
 	}
 	
 	// DEBUG
@@ -161,7 +161,7 @@ public class Map
 public class Cell
 {
 	// Posizione della cella nella griglia
-	private int x, z;
+	private int x, y;
 
 	// Se la cella è occupata -> true
 	private bool isTaken;
@@ -173,10 +173,10 @@ public class Cell
 	private Piece pieceType;
 
 
-	public Cell(int x, int z)
+	public Cell(int x, int y)
 	{
 		this.x = x;
-		this.z = z;
+		this.y = y;
 
 		isTaken = false;
 		cellObjectType = CellObjectType.Empty;
@@ -187,7 +187,7 @@ public class Cell
 
 	// Setters e Getters
 	public int X { get => x;}
-	public int Z { get => z;}
+	public int Y { get => y;}
 	public bool IsTaken { get => isTaken; set => isTaken = value; }
 	public CellObjectType CellObjectType { get => cellObjectType; set => cellObjectType = value; }
 	public Piece PieceType { get => pieceType; set => pieceType = value; }

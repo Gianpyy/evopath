@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
-using Vector3 = Godot.Vector3;
+using Vector2 = Godot.Vector2;
 
 
 // Individuo della popolazione
@@ -12,7 +12,7 @@ public class CandidateMap
 	// Array degli ostacoli ottenuto normalizzando la griglia. griglia -> array
 	private bool[] obstacles = null;
 	// Inizio e fine del percorso
-	private Vector3 startPoint, exitPoint;
+	private Vector2 startPoint, exitPoint;
 	// Numero di pezzi da aggiungere alla mappa (Knights)
 	private int nPieces = 0;
 	// Lista dei pezzi aggiunti alla mappa
@@ -31,7 +31,7 @@ public class CandidateMap
 	/// <param name="startPos">Posizione iniziale del percorso </param>
 	/// <param name="exitPos">Posizione finale del percorso</param>
 	/// <param name="autoRepair"></param>
-	public void CreateCandidateMap(Vector3 startPos, Vector3 exitPos, bool autoRepair = false)
+	public void CreateCandidateMap(Vector2 startPos, Vector2 exitPos, bool autoRepair = false)
 	{
 		startPoint = startPos;
 		exitPoint = exitPos;
@@ -47,13 +47,13 @@ public class CandidateMap
 	/// <param name="position">coordinate da controllare</param>
 	/// <returns>false se non è presente un ostacolo, true altrimenti</returns>
 	// TODO: Possibile semplificazione tramite controllo della matrice invece dell'array
-	private bool CheckObstacleAtPosition(Vector3 position)
+	private bool CheckObstacleAtPosition(Vector2 position)
 	{
 		if(position == startPoint || position == exitPoint)
 			return false;
 
 		int index;
-		index = grid.CalculateIndexFromCoordinates(position.X,position.Z);
+		index = grid.CalculateIndexFromCoordinates(position.X,position.Y);
 		
 		return obstacles[index] == false;
 
@@ -76,7 +76,7 @@ public class CandidateMap
 
 			if(obstacles[randomIndex] == false)
 			{
-				Vector3 coordinates = grid.CalculateCoordinatesFromIndex(randomIndex);
+				Vector2 coordinates = grid.CalculateCoordinatesFromIndex(randomIndex);
 
 				if(coordinates == startPoint || coordinates == exitPoint)
 				{
@@ -85,7 +85,7 @@ public class CandidateMap
 
 				obstacles[randomIndex] = true;
 				knightPiecesList.Add(new KnightPiece(coordinates));
-				GD.Print(coordinates.X+" "+coordinates.Z);
+				GD.Print(coordinates.X+" "+coordinates.Y);
 				count--;
 			}
 
@@ -95,13 +95,13 @@ public class CandidateMap
 
 	private void PlaceObstaclesForKnight(KnightPiece knight)
 	{
-		foreach(Vector3 position in KnightPiece.listOfPossibleMoves)
+		foreach(Vector2 position in KnightPiece.listOfPossibleMoves)
 		{
-			Vector3 newPosition = knight.Position + position;
+			Vector2 newPosition = knight.Position + position;
 
-			if(grid.IsCellValid(newPosition.X, newPosition.Z) && CheckObstacleAtPosition(newPosition))
+			if(grid.IsCellValid(newPosition.X, newPosition.Y) && CheckObstacleAtPosition(newPosition))
 			{
-				obstacles[grid.CalculateIndexFromCoordinates(newPosition.X,newPosition.Z)] = true;
+				obstacles[grid.CalculateIndexFromCoordinates(newPosition.X,newPosition.Y)] = true;
 			}
 		}
 	}
@@ -119,7 +119,7 @@ public class CandidateMap
     public bool[] Obstacles { get => obstacles;}
 
 	//Debug
-	public void FillBoardWithPieces(Vector3 startPos,Vector3 exitPos,Map grid, int width, int height)
+	public void FillBoardWithPieces(Vector2 startPos,Vector2 exitPos,Map grid, int width, int height)
 	{
 		obstacles = new bool[width*height];
 
@@ -131,14 +131,14 @@ public class CandidateMap
 		{
 			if(obstacles[i])
 			{
-				Vector3 pos = grid.CalculateCoordinatesFromIndex(i);
-				grid.SetCell(pos.X,pos.Z,CellObjectType.Obstacle);
+				Vector2 pos = grid.CalculateCoordinatesFromIndex(i);
+				grid.SetCell(pos.X,pos.Y,CellObjectType.Obstacle);
 			}
 		}
 
 		foreach(KnightPiece k in knightPiecesList)
 		{
-			grid.SetCell(k.Position.X, k.Position.Z, CellObjectType.Knight);
+			grid.SetCell(k.Position.X, k.Position.Y, CellObjectType.Knight);
 		}
 	}
 
