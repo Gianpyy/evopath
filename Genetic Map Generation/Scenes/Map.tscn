@@ -4,6 +4,6 @@
 
 [node name="MapGenerator" type="Node"]
 script = ExtResource("1_hnnjq")
-width = 12
-height = 12
-numberOfOstacles = 5
+width = 20
+height = 20
+numberOfOstacles = 15

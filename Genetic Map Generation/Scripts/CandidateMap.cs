@@ -17,6 +17,8 @@ public class CandidateMap
 	private int nPieces = 0;
 	// Lista dei pezzi aggiunti alla mappa
 	private List<KnightPiece> knightPiecesList = new List<KnightPiece>();
+	// Il percorso che porta dall'inizio alla fine
+	private List<Vector2> path = new List<Vector2>();
 
 
 	public CandidateMap(Map grid, int nPieces)
@@ -39,6 +41,7 @@ public class CandidateMap
 		RandomlyPlaceKnightPieces(nPieces);
 
 		PlaceKnightObstacles();
+		FindPath();
 	}
 
 	/// <summary>
@@ -114,6 +117,18 @@ public class CandidateMap
 		}
 	}
 
+	
+	private void FindPath()
+	{
+		path = AStar.GetPath(startPoint, exitPoint, obstacles, grid);
+		foreach(Vector2 position in path)
+		{
+			GD.Print(position);
+			if (position != exitPoint)
+				grid.SetCell(position.X, position.Y, CellObjectType.Road);
+		}
+	}
+
 	//Setters e Getters
 	public Map Grid {get => grid;}
     public bool[] Obstacles { get => obstacles;}
@@ -141,6 +156,4 @@ public class CandidateMap
 			grid.SetCell(k.Position.X, k.Position.Y, CellObjectType.Knight);
 		}
 	}
-
-
 }
