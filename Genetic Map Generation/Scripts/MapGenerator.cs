@@ -12,8 +12,11 @@ public partial class MapGenerator : Node
 	[Export]
 	public Direction startEdge, exitEdge;
 
-	Map map;
+	private Map map;
 	private Vector2 startPosition, exitPosition;
+
+	[Export]
+	public MapVisualizer mapVisualizer;
 
 	public override void _Ready() 
 	{
@@ -33,5 +36,7 @@ public partial class MapGenerator : Node
 		CandidateMap candidateMap = new CandidateMap(map, numberOfOstacles);
 		candidateMap.FillBoardWithPieces(startPosition, exitPosition ,map, width, height);
 		map.PrintMapConsole();
+
+		mapVisualizer.GenerateMap(map);
 	}
 }

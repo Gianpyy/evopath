@@ -10,8 +10,9 @@ public class Map
 
 	public int Width { get => width; set => width = value; }
 	public int Height { get => height; set => height = value; }
+    public Cell[,] MapGrid { get => map; set => map = value; }
 
-	public Map(int width, int height)
+    public Map(int width, int height)
 	{
 		this.width = width;
 		this.height = height;

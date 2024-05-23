@@ -1,9 +1,44 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvfqnm4w4w3xp"]
+[gd_scene load_steps=10 format=3 uid="uid://cvfqnm4w4w3xp"]
 
 [ext_resource type="Script" path="res://Scripts/MapGenerator.cs" id="1_hnnjq"]
+[ext_resource type="Script" path="res://Scripts/MapVisualizer.cs" id="2_4xduw"]
+[ext_resource type="MeshLibrary" uid="uid://7uc7o6f3n0ft" path="res://GridLibrary.tres" id="3_u4pg5"]
+[ext_resource type="PackedScene" uid="uid://brusrreih61qr" path="res://Prefabs/Grass.tscn" id="3_vtklo"]
+[ext_resource type="PackedScene" uid="uid://d04ihnxuylj5f" path="res://Prefabs/Road.tscn" id="4_v5011"]
+[ext_resource type="PackedScene" uid="uid://cw2l8651bsuog" path="res://Prefabs/Start.tscn" id="5_d3yux"]
+[ext_resource type="PackedScene" uid="uid://cs0t1byr7n11y" path="res://Prefabs/Exit.tscn" id="6_incgd"]
+[ext_resource type="PackedScene" uid="uid://byaup0mxy6jjl" path="res://Prefabs/Knight.tscn" id="7_06euh"]
+[ext_resource type="PackedScene" uid="uid://cc34gpbawun4q" path="res://Prefabs/Obstacle.tscn" id="8_hcgic"]
 
-[node name="MapGenerator" type="Node"]
+[node name="MapGenerator" type="Node" node_paths=PackedStringArray("mapVisualizer")]
 script = ExtResource("1_hnnjq")
-width = 20
-height = 20
-numberOfOstacles = 15
+width = 50
+height = 50
+numberOfOstacles = 40
+startEdge = 2
+exitEdge = 1
+mapVisualizer = NodePath("MapVisualizer")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.00695e-08, 0.916684, -0.399613, -1.74677e-08, 0.399613, 0.916684, 1, 4.37114e-08, 0, -44.6311, 29.3945, 21.8439)
+fov = 87.1274
+
+[node name="MapVisualizer" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 8.74228e-08, 7.64274e-15, -1, 8.74228e-08, 8.74228e-08, 8.74228e-08, 1, 0, 0, 0)
+rotation_order = 0
+script = ExtResource("2_4xduw")
+grassObj = ExtResource("3_vtklo")
+roadObj = ExtResource("4_v5011")
+startObj = ExtResource("5_d3yux")
+exitObj = ExtResource("6_incgd")
+knightObj = ExtResource("7_06euh")
+obstacleObj = ExtResource("8_hcgic")
+
+[node name="GridMap" type="GridMap" parent="MapVisualizer"]
+rotation_order = 0
+mesh_library = ExtResource("3_u4pg5")
+cell_size = Vector3(1, 1, 1)
+metadata/_editor_floor_ = Vector3(0, 1, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="MapVisualizer/GridMap"]
+transform = Transform3D(0.987871, -0.152427, -0.0296241, -0.00114872, 0.183601, -0.983, 0.155274, 0.971111, 0.181199, 4.97602e-14, -6.51078, 5.69191e-07)

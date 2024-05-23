@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cs0t1byr7n11y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kflox"]
+albedo_color = Color(0.927624, 0.842104, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_56k3y"]
+
+[node name="Road" type="Node3D"]
+
+[node name="Road" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_kflox")
+mesh = SubResource("BoxMesh_56k3y")
