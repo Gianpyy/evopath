@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://byaup0mxy6jjl"]
+
+[ext_resource type="ArrayMesh" uid="uid://dg4lp1alwq4x2" path="res://Prefabs/Terrain/OBJ/City.obj" id="1_2olj7"]
+[ext_resource type="Texture2D" uid="uid://ccb2ckcflr3ic" path="res://Prefabs/Terrain/OBJ/City.png" id="1_p68io"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bwij6"]
+albedo_texture = ExtResource("1_p68io")
+
+[node name="Road" type="Node3D"]
+
+[node name="City" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, -5.96046e-08, 0, 5.96046e-08, -1, 1, -1, 1)
+material_override = SubResource("StandardMaterial3D_bwij6")
+mesh = ExtResource("1_2olj7")

@@ -16,7 +16,7 @@ public partial class MapVisualizer : Node3D
             {
 
 				Node3D grass = (Node3D)grassObj.Instantiate();
-				grass.Position = new Vector3I(i,0,j);
+				grass.Position = new Vector3I(i*2,0,j*2);
 				AddChild(grass);
 
 				Node3D spawnObj = null;
@@ -48,7 +48,8 @@ public partial class MapVisualizer : Node3D
 
 				if(spawnObj!=null)
 				{
-					spawnObj.Position = new Vector3I(i,-1,j);
+					spawnObj.Position = new Vector3I(i*2,-1,j*2);
+					
 					AddChild(spawnObj);
 				}
                 
