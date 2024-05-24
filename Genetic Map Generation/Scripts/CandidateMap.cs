@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Vector2 = Godot.Vector2;
 
@@ -20,7 +21,6 @@ public class CandidateMap
 	// Il percorso che porta dall'inizio alla fine
 	private List<Vector2> path = new List<Vector2>();
 
-
 	public CandidateMap(Map grid, int nPieces)
 	{
 		this.grid = grid;
@@ -33,15 +33,20 @@ public class CandidateMap
 	/// <param name="startPos">Posizione iniziale del percorso </param>
 	/// <param name="exitPos">Posizione finale del percorso</param>
 	/// <param name="autoRepair"></param>
-	public void CreateCandidateMap(Vector2 startPos, Vector2 exitPos, bool autoRepair = false)
+	public void CreateCandidateMap(Vector2 startPos, Vector2 exitPos, bool autoRepair)
 	{
 		startPoint = startPos;
 		exitPoint = exitPos;
 
 		RandomlyPlaceKnightPieces(nPieces);
-
 		PlaceKnightObstacles();
 		FindPath();
+		
+		if (autoRepair) 
+		{
+			Repair();
+        }
+			
 	}
 
 	/// <summary>
@@ -96,6 +101,10 @@ public class CandidateMap
 		}
 	}
 
+	/// <summary>
+	/// Aggiunge un ostacolo per ogni mossa possibile del pezzo Knight
+	/// </summary>
+	/// <param name="knight">Il KnighPiece le cui mosse determineranno il posizionamento degli ostacoli</param>
 	private void PlaceObstaclesForKnight(KnightPiece knight)
 	{
 		foreach(Vector2 position in KnightPiece.listOfPossibleMoves)
@@ -109,6 +118,9 @@ public class CandidateMap
 		}
 	}
 
+	/// <summary>
+	/// Aggiunge gli ostacoli per ogni KnightPiece della lista dei KnighPiece
+	/// </summary>
 	private void PlaceKnightObstacles()
 	{
 		foreach(KnightPiece knight in knightPiecesList)
@@ -117,7 +129,10 @@ public class CandidateMap
 		}
 	}
 
-	
+	/// <summary>
+	/// Trova il percorso più breve, utilizzando l'algoritmo A*, dal punto di inizio al punto di fine.
+	/// Viene creato un array di Vector2 con le coordinate del percorso e viene impostata la cella di tipo "Road" nella griglia
+	/// </summary>
 	private void FindPath()
 	{
 		path = AStar.GetPath(startPoint, exitPoint, obstacles, grid);
@@ -129,19 +144,74 @@ public class CandidateMap
 		}
 	}
 
+	/// <summary>
+	/// Elimina casualmente un ostacolo finché non viene trovato un percorso dal punto di inizio al punto di fine
+	/// Una volta trovato il percorso, gli ostacoli rimossi che non fanno parte del percorso vengono riaggiunti nell'array delgi ostacoli
+	/// </summary>
+	/// <returns>La lista degli ostacoli rimossi</returns>
+	public List<Vector2> Repair()
+	{
+		int numberOfObstacles = obstacles.Count(obstacle => obstacle);
+		List<Vector2> obstaclesToRemove = new List<Vector2>();
+		Random rand = new Random();
+		if (path.Count <= 0)
+		{
+			do {
+				int obstacleIndextoRemove = rand.Next(0, numberOfObstacles);
+				for (int i = 0; i < obstacles.Length; i++) {
+					if (obstacles[i]) {
+						if (obstacleIndextoRemove == 0) {
+							obstacles[i] = false;
+							obstaclesToRemove.Add(grid.CalculateCoordinatesFromIndex(i));
+							break;
+						}
+						obstacleIndextoRemove--;
+					}
+				}
+
+				FindPath();
+			} while (this.path.Count <= 0);
+		}
+
+		foreach(Vector2 obstaclePosition in obstaclesToRemove) 
+		{
+			string s = "Obstacle ("+obstaclePosition.X+","+obstaclePosition.Y+") removed";
+			if (path.Contains(obstaclePosition) == false) 
+			{
+				s+=" and reinserted";
+				int index = grid.CalculateIndexFromCoordinates(obstaclePosition.X, obstaclePosition.Y);
+                obstacles[index] = true;
+			}
+
+			GD.Print(s);
+        }
+
+		return obstaclesToRemove;
+	}
+
 	//Setters e Getters
 	public Map Grid {get => grid;}
     public bool[] Obstacles { get => obstacles;}
 
+
 	//Debug
-	public void FillBoardWithPieces(Vector2 startPos,Vector2 exitPos,Map grid, int width, int height)
+
+	/// <summary>
+	/// Genera la mappa candidata delle dimensioni specificate e piazza gli ostacoli su di essa
+	/// </summary>
+	/// <param name="startPos">La posizione di inizio</param>
+	/// <param name="exitPos">La posizione di fine</param>
+	/// <param name="grid">La griglia associata alla mappa</param>
+	/// <param name="width">La larghezza della mappa</param>
+	/// <param name="height">L'altezza della mappa</param>
+	/// <param name="autoRepair">Se bisogna trovare un percorso eliminando ostacoli finchè non se ne trova uno. Default: false</param>
+	public void GenerateCandidateMap(Vector2 startPos,Vector2 exitPos, Map grid, int width, int height, bool autoRepair = false)
 	{
 		obstacles = new bool[width*height];
 
-		CreateCandidateMap(startPos,exitPos);
+		CreateCandidateMap(startPos,exitPos, autoRepair);
 
-		
-
+		// Possibile miglioria: contraddistinguere i KnightPiece dagli ostacoli (potrebbe tornare utile per mettere asset diversi)
 		for(int i = 0;i < obstacles.Length; i++)
 		{
 			if(obstacles[i])
@@ -151,9 +221,12 @@ public class CandidateMap
 			}
 		}
 
+		/*	
 		foreach(KnightPiece k in knightPiecesList)
 		{
 			grid.SetCell(k.Position.X, k.Position.Y, CellObjectType.Knight);
 		}
+		*/
 	}
+	
 }

@@ -10,6 +10,9 @@ public partial class MapGenerator : Node
 	public bool randomPlacement;
 
 	[Export]
+	public bool autoRepair;
+
+	[Export]
 	public Direction startEdge, exitEdge;
 
 	private Map map;
@@ -34,7 +37,7 @@ public partial class MapGenerator : Node
 
 		GD.Print("Creo la candidate map con gli ostacoli...");
 		CandidateMap candidateMap = new CandidateMap(map, numberOfOstacles);
-		candidateMap.FillBoardWithPieces(startPosition, exitPosition ,map, width, height);
+		candidateMap.GenerateCandidateMap(startPosition, exitPosition, map, width, height, autoRepair);
 		map.PrintMapConsole();
 
 		mapVisualizer.GenerateMap(map);
