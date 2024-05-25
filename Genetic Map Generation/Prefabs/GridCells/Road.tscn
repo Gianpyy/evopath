@@ -1,14 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://d04ihnxuylj5f"]
+[gd_scene load_steps=2 format=3 uid="uid://d04ihnxuylj5f"]
 
-[ext_resource type="Texture2D" uid="uid://cph7s8pi585xo" path="res://Prefabs/Terrain/Terrain.png" id="1_1p5qu"]
-[ext_resource type="ArrayMesh" uid="uid://fklc3tq603fj" path="res://Prefabs/Terrain/OBJ/Road.obj" id="2_6nwul"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ulpgq"]
-albedo_texture = ExtResource("1_1p5qu")
+[ext_resource type="ArrayMesh" uid="uid://bjarufkbr57w8" path="res://Prefabs/WorldTiles/3D Overworld Tileset/tiles_land/Overworld_Land_15.obj" id="1_or4ni"]
 
 [node name="Road" type="Node3D"]
 
-[node name="Road" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
-material_override = SubResource("StandardMaterial3D_ulpgq")
-mesh = ExtResource("2_6nwul")
+[node name="OverworldLand15" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.25, 0, 0, 0, -1.25, 1.88745e-07, 0, -1.88745e-07, -1.25, 2, 0, 2)
+mesh = ExtResource("1_or4ni")

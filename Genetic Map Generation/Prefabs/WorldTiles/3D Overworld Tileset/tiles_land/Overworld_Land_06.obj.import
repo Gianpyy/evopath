@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://br3duoqlggvvp"
+path="res://.godot/imported/Overworld_Land_06.obj-a7b5e3296fd36b0423ea1c79c4cded00.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Overworld_Land_06.obj-a7b5e3296fd36b0423ea1c79c4cded00.mesh"]
+
+source_file="res://Prefabs/WorldTiles/3D Overworld Tileset/tiles_land/Overworld_Land_06.obj"
+dest_files=["res://.godot/imported/Overworld_Land_06.obj-a7b5e3296fd36b0423ea1c79c4cded00.mesh", "res://.godot/imported/Overworld_Land_06.obj-a7b5e3296fd36b0423ea1c79c4cded00.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

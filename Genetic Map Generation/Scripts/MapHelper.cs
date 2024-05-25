@@ -13,7 +13,7 @@ public static class MapHelper
 	/// <param name="randomPlacement">Se il bordo di entrata ed uscita deve essere selezionato casualmente</param>
 	/// <param name="startPositionEdge">Il bordo da cui verrà scelta l'entrata. Default: sinistra</param>
 	/// <param name="exitPositionEdge">Il bordo da cui verrà scelta l'uscita. Default: destra</param>
-	public static void RandomlyChooseAndSetStartExit(Map grid, ref Vector2 startPosition, ref Vector2 exitPosition, bool randomPlacement, Direction startPositionEdge = Direction.Left, Direction exitPositionEdge = Direction.Right) 
+	public static void ChooseAndSetStartExit(Map grid, ref Vector2 startPosition, ref Vector2 exitPosition, bool randomPlacement, Direction startPositionEdge = Direction.Left, Direction exitPositionEdge = Direction.Right) 
 	{
 		if (randomPlacement)
 		{

@@ -32,7 +32,9 @@ public partial class MapGenerator : Node
 
 
 		GD.Print("Imposto casualmente entrata ed uscita...");
-		MapHelper.RandomlyChooseAndSetStartExit(map, ref startPosition, ref exitPosition, false, Direction.Up, Direction.Right);
+
+
+		MapHelper.ChooseAndSetStartExit(map, ref startPosition, ref exitPosition, randomPlacement, startEdge, exitEdge);
 		map.PrintMapConsole();
 
 		GD.Print("Creo la candidate map con gli ostacoli...");

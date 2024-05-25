@@ -1,13 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://brusrreih61qr"]
+[gd_scene load_steps=2 format=3 uid="uid://brusrreih61qr"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kflox"]
-albedo_color = Color(0.31368, 0.55391, 0.194174, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_56k3y"]
+[ext_resource type="ArrayMesh" uid="uid://dvooxmaapev5m" path="res://Prefabs/WorldTiles/3D Overworld Tileset/tiles_land/Overworld_Land_02.obj" id="1_px03s"]
 
 [node name="Grass" type="Node3D"]
 
-[node name="Grass" type="MeshInstance3D" parent="."]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 1, 0, 1)
-material_override = SubResource("StandardMaterial3D_kflox")
-mesh = SubResource("BoxMesh_56k3y")
+[node name="OverworldLand02" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.25, 0, 0, 0, -1.25, -1.88745e-07, 0, 1.88745e-07, -1.25, 2, 0, 2)
+mesh = ExtResource("1_px03s")

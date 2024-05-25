@@ -1,15 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cc34gpbawun4q"]
+[gd_scene load_steps=2 format=3 uid="uid://cc34gpbawun4q"]
 
-[ext_resource type="Texture2D" uid="uid://dogrv24ma03c1" path="res://Prefabs/Terrain/OBJ/Forest.png" id="1_4b5nv"]
-[ext_resource type="ArrayMesh" uid="uid://da3cuan7cj566" path="res://Prefabs/Terrain/OBJ/Forest.obj" id="2_hsv6t"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m1aht"]
-albedo_color = Color(0.729412, 0.803922, 0.498039, 1)
-albedo_texture = ExtResource("1_4b5nv")
+[ext_resource type="ArrayMesh" uid="uid://dvooxmaapev5m" path="res://Prefabs/WorldTiles/3D Overworld Tileset/tiles_land/Overworld_Land_02.obj" id="1_wn46l"]
 
 [node name="Road" type="Node3D"]
 
-[node name="Forest" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 1, -1, 1)
-material_override = SubResource("StandardMaterial3D_m1aht")
-mesh = ExtResource("2_hsv6t")
+[node name="OverworldLand02" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.25, 1.88745e-07, 0, -1.88745e-07, -1.25, 0, 0, 0, 1.25, 2, 0, 2)
+mesh = ExtResource("1_wn46l")

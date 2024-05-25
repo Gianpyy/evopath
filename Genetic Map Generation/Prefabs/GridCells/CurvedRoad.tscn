@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7opg0rfceh25"]
+
+[ext_resource type="ArrayMesh" uid="uid://cvud55s0wlrda" path="res://Prefabs/WorldTiles/3D Overworld Tileset/tiles_land/Overworld_Land_16.obj" id="1_j642s"]
+
+[node name="Road" type="Node3D"]
+
+[node name="OverworldLand16" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.25, -1.09278e-07, 0, 1.09278e-07, -1.25, 0, 0, 0, 1.25, 2, 0, 2)
+mesh = ExtResource("1_j642s")
