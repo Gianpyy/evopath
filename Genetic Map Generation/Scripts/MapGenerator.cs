@@ -43,5 +43,7 @@ public partial class MapGenerator : Node
 		map.PrintMapConsole();
 
 		mapVisualizer.GenerateMap(map);
+		GD.Print("Numero di curve: "+candidateMap.CornersList.Count);
+		GD.Print("Numero di curve consecutive: " +candidateMap.ConsecutiveCornersCount);
 	}
 }

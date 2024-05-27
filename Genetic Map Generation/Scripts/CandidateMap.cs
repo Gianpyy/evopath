@@ -21,10 +21,28 @@ public class CandidateMap
 	// Il percorso che porta dall'inizio alla fine
 	private List<Vector2> path = new List<Vector2>();
 
+	// -- Variabili per algoritmo genetico --
+
+	// Lista contenente le coordinate delle curve del percorso
+	private List<Vector2> cornersList;
+	// Conteggio delle curve consecutive (valore da minimizzare nella funzione di fitness)
+	private int consecutiveCornersCount;
+
 	public CandidateMap(Map grid, int nPieces)
 	{
 		this.grid = grid;
 		this.nPieces = nPieces;
+	}
+
+	public CandidateMap(CandidateMap candidateMap)
+	{
+		grid = candidateMap.grid;
+		obstacles = (bool[]) candidateMap.obstacles.Clone();
+		startPoint = candidateMap.startPoint;
+		exitPoint = candidateMap.exitPoint;
+		cornersList = new List<Vector2>(candidateMap.cornersList);
+		consecutiveCornersCount = candidateMap.consecutiveCornersCount;
+		path = new List<Vector2>(path);
 	}
 
 	/// <summary>
@@ -46,6 +64,10 @@ public class CandidateMap
 		{
 			Repair();
         }
+
+		// Debug
+		cornersList = GetListOfCorners(path);
+		consecutiveCornersCount = CalculateConsecutiveCorners(cornersList);
 			
 	}
 
@@ -54,7 +76,6 @@ public class CandidateMap
 	/// </summary>
 	/// <param name="position">coordinate da controllare</param>
 	/// <returns>false se non è presente un ostacolo, true altrimenti</returns>
-	// TODO: Possibile semplificazione tramite controllo della matrice invece dell'array
 	private bool CheckObstacleAtPosition(Vector2 position)
 	{
 		if(position == startPoint || position == exitPoint)
@@ -136,6 +157,10 @@ public class CandidateMap
 	private void FindPath()
 	{
 		path = AStar.GetPath(startPoint, exitPoint, obstacles, grid);
+		cornersList = GetListOfCorners(path);
+		consecutiveCornersCount = CalculateConsecutiveCorners(cornersList);
+
+		// Debug
 		foreach(Vector2 position in path)
 		{
 			GD.Print(position);
@@ -189,9 +214,68 @@ public class CandidateMap
 		return obstaclesToRemove;
 	}
 
+	// -- Metodi per algoritmo genetico --
+
+	/// <summary>
+	/// Restituisce una lista di tutte le curve (ossia un cambio di direzione) contenute in un percorso.
+	/// </summary>
+	/// <param name="path">La lista contente le coordinate del percorso</param>
+	/// <returns>Le coordinate delle curve contenute nel percorso</returns>
+	private List<Vector2> GetListOfCorners(List<Vector2> path)
+	{
+		List<Vector2> completePath = new List<Vector2>(path);
+		completePath.Insert(0, startPoint);
+		List<Vector2> corners = new List<Vector2>();
+		if (completePath.Count <= 0)
+			return corners;
+
+		for (int i = 0; i < completePath.Count-2; i++)
+		{
+			if(completePath[i+1].X > completePath[i].X || completePath[i+1].X < completePath[i].X)
+			{
+				if(completePath[i+2].Y > completePath[i+1].Y || completePath[i+2].Y < completePath[i+1].Y)
+				{
+					corners.Add(completePath[i+1]);
+				}
+			}
+			else if(completePath[i+1].Y > completePath[i].Y || completePath[i+1].Y < completePath[i].Y)
+			{
+				if(completePath[i+2].X > completePath[i+1].X || completePath[i+2].X < completePath[i+1].X)
+				{
+					corners.Add(completePath[i+1]);
+				}
+			}
+		}
+
+		return corners;
+	}
+
+	/// <summary>
+	/// Calcola il numero di curve consecutive a partire da una lista di coordinate di curve
+	/// </summary>
+	/// <param name="corners">La lista contenente le coordinate delle curve</param>
+	/// <returns>Il numero di curve consecutive</returns>
+	private int CalculateConsecutiveCorners(List<Vector2> corners)
+	{
+		int consecutiveCorners = 0;
+		for (int i = 0; i < cornersList.Count-1; i++)
+		{
+			if (cornersList[i].DistanceTo(cornersList[i+1]) <= 1)
+				consecutiveCorners++;
+		}
+
+		return consecutiveCorners;
+	}
+
 	//Setters e Getters
 	public Map Grid {get => grid;}
     public bool[] Obstacles { get => obstacles;}
+
+
+	public CandidateMap DeepClone()
+	{
+		return new CandidateMap(this);
+	}
 
 
 	//Debug
@@ -229,4 +313,8 @@ public class CandidateMap
 		*/
 	}
 	
+	// Getter per consecutiveCorners e lista curve
+	public int ConsecutiveCornersCount {get => consecutiveCornersCount;}
+	public List<Vector2> CornersList {get => cornersList;}
+
 }

@@ -3,7 +3,7 @@ using System;
 
 public partial class MapVisualizer : Node3D
 {
-	 [Export]
+	[Export]
     public PackedScene grassObj, roadObj, curvedRoadObj, startObj, exitObj, knightObj, obstacleObj;
 
     public void GenerateMap(Map map)
