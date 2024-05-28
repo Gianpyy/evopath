@@ -154,7 +154,7 @@ public class CandidateMap
 	/// Trova il percorso più breve, utilizzando l'algoritmo A*, dal punto di inizio al punto di fine.
 	/// Viene creato un array di Vector2 con le coordinate del percorso e viene impostata la cella di tipo "Road" nella griglia
 	/// </summary>
-	private void FindPath()
+	public void FindPath()
 	{
 		path = AStar.GetPath(startPoint, exitPoint, obstacles, grid);
 		cornersList = GetListOfCorners(path);
