@@ -24,6 +24,7 @@ public partial class MapGenerator : Node
 	public override void _Ready() 
 	{
 		// DEBUG
+		/*
 		map = new Map(width,height);
 
 		GD.Print("Creo la mappa vuota");
@@ -46,6 +47,7 @@ public partial class MapGenerator : Node
 		GD.Print("Numero di curve: "+candidateMap.CornersList.Count);
 		GD.Print("Numero di curve consecutive: " +candidateMap.ConsecutiveCornersCount);
 
-		
+		GD.Print("Valore di fitness: ");
+		*/
 	}
 }

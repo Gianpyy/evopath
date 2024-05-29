@@ -267,12 +267,18 @@ public class CandidateMap
 		return consecutiveCorners;
 	}
 
-	//Setters e Getters
+	// Getters
 	public Map Grid {get => grid;}
+
     public bool[] Obstacles { get => obstacles;}
 
+	public int ConsecutiveCornersCount {get => consecutiveCornersCount;}
+	
+	public List<Vector2> CornersList {get => cornersList;}
 
-	public CandidateMap DeepClone()
+    public List<Vector2> Path { get => path;}
+
+    public CandidateMap DeepClone()
 	{
 		return new CandidateMap(this);
 	}
@@ -312,9 +318,5 @@ public class CandidateMap
 		}
 		*/
 	}
-	
-	// Getter per consecutiveCorners e lista curve
-	public int ConsecutiveCornersCount {get => consecutiveCornersCount;}
-	public List<Vector2> CornersList {get => cornersList;}
 
 }
