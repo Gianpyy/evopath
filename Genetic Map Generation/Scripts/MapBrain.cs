@@ -129,7 +129,46 @@ public partial class MapBrain : Node
 			}
 		}
 
+		//Controllo per selezionare il miglior individuo tra tutte le generazioni
+		if(bestFitnessScoreThisGeneration > bestFitnessScoreAllTime)
+		{
+			bestFitnessScoreAllTime = bestFitnessScoreThisGeneration;
+			bestMap = bestMapThisGeneration.DeepClone();
+			bestMapGenerationNumber = generationNumber;
+		}
 
+		generationNumber++;
+
+
+		if(!IsOutOfResources())
+		{
+			List<CandidateMap> nextGeneration = new List<CandidateMap>();
+		
+			while(nextGeneration.Count < populationSize)
+			{
+				CandidateMap parent1 = currentGeneration[RouletteWheelSelection()];
+				CandidateMap parent2 = currentGeneration[RouletteWheelSelection()];
+
+				// TODO: Crossover e mutation
+				
+			}
+		}
+
+
+	}
+
+	/// <summary>
+	/// Controlla se si ha ancora a disposizione del budget di ricerca
+	/// </summary>
+	/// <returns>true: se il budget è finito, false altrimenti</returns>
+	private bool IsOutOfResources()
+	{
+		// Controllo per il numero di generazioni come budget
+		if(generationNumber < generationLimit)
+			return false;
+		else
+			return true;
+		
 	}
 		
 	/// <summary>
@@ -184,6 +223,31 @@ public partial class MapBrain : Node
 
 		return fitnessScore;
 	}
+
+	/// <summary>
+	/// Seleziona un individuo dalla popolazione corrente utilizzando la roulette wheel selection.
+	/// La probabilità di selezionare un individuo è proporzionale alla sua fitness.
+	/// </summary>
+	/// <returns>
+	/// L'indice dell'individuo selezionato nella popolazione corrente.
+	/// </returns>
+	private int RouletteWheelSelection()
+	{
+		Random rand = new Random();
+		
+		int randomValue = rand.Next(0, totalFitnessThisGeneration);
+
+		for (int i = 0; i < populationSize; i++)
+		{
+			randomValue -= CalculateFitness(currentGeneration[i]);
+
+			if(randomValue <= 0)
+				return i;
+		}
+
+		return populationSize - 1;
+	}
+
 	
 
 	// Called when the node enters the scene tree for the first time.
