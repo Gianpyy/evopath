@@ -149,9 +149,14 @@ public partial class MapBrain : Node
 				CandidateMap parent1 = currentGeneration[RouletteWheelSelection()];
 				CandidateMap parent2 = currentGeneration[RouletteWheelSelection()];
 
-				// TODO: Crossover e mutation
-				
+				CandidateMap child1, child2;
+
+				SinglePointCrossover(parent1, parent2, out child1, out child2);
+
+				//TODO: Mutation
 			}
+
+			currentGeneration = nextGeneration;
 		}
 
 
@@ -246,6 +251,35 @@ public partial class MapBrain : Node
 		}
 
 		return populationSize - 1;
+	}
+
+	/// <summary>
+	/// Esegue un single point crossover tra due mappe candidate genitori per produrre due mappe candidate figli.
+	/// Viene scelto casualmente un punto di taglio dal genitore1 e vengono incrociati gli array di ostacoli dopo quel punto per generare i figli
+	/// </summary>
+	/// <param name="parent1">La prima mappa candidata genitore.</param>
+	/// <param name="parent2">La seconda mappa candidata genitore.</param>
+	/// <param name="child1">La prima mappa candidata figlio risultante dal crossover.</param>
+	/// <param name="child2">La seconda mappa candidata figlio risultante dal crossover.</param>
+	private void SinglePointCrossover(CandidateMap parent1, CandidateMap parent2, out CandidateMap child1, out CandidateMap child2)
+	{
+		
+		Random rand = new Random();
+
+		child1 = parent1.DeepClone();
+		child2 = parent2.DeepClone();
+
+		if(rand.Next(0, 100) < crossoverRate)
+		{
+			int numBITs = parent1.Obstacles.Length;
+			int crossOverIndex = rand.Next(0, numBITs);
+
+			for (int i = crossOverIndex; i < numBITs; i++)
+			{
+				child1.PlaceObstacle(i , parent2.IsObstacleAt(i));
+				child2.PlaceObstacle(i, parent1.IsObstacleAt(i));
+			}
+		}
 	}
 
 	

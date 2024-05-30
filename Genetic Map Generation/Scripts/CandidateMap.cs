@@ -267,6 +267,26 @@ public class CandidateMap
 		return consecutiveCorners;
 	}
 
+	/// <summary>
+	/// Controlla se nell'array degli ostacoli alla posizione passato come parametro è presente un ostacolo
+	/// </summary>
+	/// <param name="index">Posizione dove controllare la presenza di un ostacolo</param>
+	/// <returns>true se è presente un ostacolo, false altrimenti</returns>
+	public bool IsObstacleAt(int index)
+	{
+		return obstacles[index];
+	}
+
+	/// <summary>
+	/// Imposta l'ostacolo nell'array degli ostacoli all'indice passato come parametro
+	/// </summary>
+	/// <param name="index">Posizione dove posizionare l'ostacolo nell'array degli ostacoli</param>
+	/// <param name="isObstacle">Imposta se è un ostacolo oppure no</param>
+	public void PlaceObstacle(int index, bool isObstacle)
+	{
+		obstacles[index] = isObstacle;
+	}
+
 	// Getters
 	public Map Grid {get => grid;}
 
