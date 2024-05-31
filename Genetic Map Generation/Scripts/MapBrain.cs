@@ -14,7 +14,7 @@ public partial class MapBrain : Node
 	// Tasso di crossover
 	[Export] private int crossoverRate = 100;
 	// Tasso di mutazione
-	[Export] private int mutationRate = 0;
+	[Export] private int mutationRate = 5;
 	// Limite di generazioni
 	[Export] private int generationLimit = 10; 
 
@@ -280,6 +280,25 @@ public partial class MapBrain : Node
 				child2.PlaceObstacle(i, parent1.IsObstacleAt(i));
 			}
 		}
+	}
+
+	/// <summary>
+	/// Applica la bitflip mutation a una mappa candidata.
+	/// </summary>
+	/// <param name="candidateMap">La mappa candidata su cui applicare la mutazione.</param>
+	private void BitflipMutation(CandidateMap candidateMap)
+	{
+		Random rand = new Random();
+
+		for (int i = 0; i < candidateMap.Obstacles.Length; i++)
+		{
+			if (rand.Next(0, 100) < mutationRate)
+			{
+				bool obstacleAtIndex = candidateMap.IsObstacleAt(i);
+				candidateMap.PlaceObstacle(i, !obstacleAtIndex);
+			}
+		}
+
 	}
 
 	
