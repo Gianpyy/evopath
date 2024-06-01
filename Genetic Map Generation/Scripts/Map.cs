@@ -154,6 +154,27 @@ public class Map
         GD.PrintRich(s);
 	}
 
+	public Map DeepClone()
+	{
+		Map clonedMap = new Map(width, height);
+
+		for (int row = 0; row < height; row++)
+		{
+			for (int col = 0; col < width; col++)
+			{
+				Cell originalCell = map[row,col];
+				Cell newCell = new Cell(originalCell.X, originalCell.Y)
+				{
+					IsTaken = originalCell.IsTaken,
+					CellObjectType = originalCell.CellObjectType,
+				};
+
+				clonedMap.map[row,col] = newCell;
+			}
+		}
+
+		return clonedMap;
+	}
 }
 
 /// <summary>
@@ -183,8 +204,6 @@ public class Cell
 		cellObjectType = CellObjectType.Empty;
 
 	}
-
-
 
 	// Setters e Getters
 	public int X { get => x;}
@@ -217,8 +236,3 @@ public enum Piece
 	K
 
 }
-
-
-
-
-

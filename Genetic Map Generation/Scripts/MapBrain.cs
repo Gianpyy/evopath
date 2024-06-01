@@ -1,4 +1,6 @@
 using Godot;
+using HCoroutines;
+using MEC;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,9 +14,9 @@ public partial class MapBrain : Node
 	// Dimensione della popolazione iniziale
 	[Export] private int populationSize = 10; 
 	// Tasso di crossover
-	[Export] private int crossoverRate = 100;
+	[Export] private int crossoverRate = 0;
 	// Tasso di mutazione
-	[Export] private int mutationRate = 5;
+	[Export] private int mutationRate = 0;
 	// Limite di generazioni
 	[Export] private int generationLimit = 10; 
 
@@ -59,15 +61,24 @@ public partial class MapBrain : Node
 
 	// DEBUG
 	[Export] private MapVisualizer mapVisualizer;
+	DateTime startDate, endDate;
 
     /// <summary>
     /// Avvia l'algoritmo
     /// </summary>
     public void RunAlgorithm()
 	{
-		
-		//isAlgorithmRunning = true;
+		ResetAlgorithm();
 
+		grid = new Map(mapWidth, mapHeight);
+
+		MapHelper.ChooseAndSetStartExit(grid, ref startPosition, ref exitPosition, randomStartAndEnd, startPositionEdge, exitPositionEdge);
+		
+		isAlgorithmRunning = true;
+
+		startDate = DateTime.Now;
+
+		FindOptimalSolution(grid);
 	}
 
 	/// <summary>
@@ -85,13 +96,13 @@ public partial class MapBrain : Node
 	/// <summary>
 	/// Crea la popolazione iniziale per l'algoritmo genetico
 	/// </summary>
-	private void CreateStartingPopulation()
+	private void CreateStartingPopulation(Map grid)
 	{	
 		currentGeneration = new List<CandidateMap>(populationSize);
 		
 		for (int i = 0; i < populationSize; i++)
 		{
-			CandidateMap newCandidateMap = new CandidateMap(grid,numberOfKnightPieces);
+			CandidateMap newCandidateMap = new CandidateMap(grid.DeepClone(), numberOfKnightPieces);
 			newCandidateMap.CreateCandidateMap(startPosition, exitPosition, true);
 			currentGeneration.Add(newCandidateMap);
 		}
@@ -100,9 +111,8 @@ public partial class MapBrain : Node
 	// Trova la soluzione ottima tramite l'algoritmo genetico
 	private void FindOptimalSolution(Map grid)
 	{
-		CreateStartingPopulation();
+		CreateStartingPopulation(grid);
 		GeneticAlgorithm();
-
 	}
 
 	// Algoritmo genetico per trovare la miglior generazione
@@ -117,15 +127,14 @@ public partial class MapBrain : Node
 			candidateMap.FindPath();
 			candidateMap.Repair();
 
-			//TODO: il parametro deve ottenere i dati della mappa
-			//		Creare metodo in CandidateMap
 			int fitness = CalculateFitness(candidateMap);
-
+			
+			totalFitnessThisGeneration += fitness;
 			
 			if(fitness > bestFitnessScoreThisGeneration)
 			{
 				bestFitnessScoreThisGeneration = fitness;
-				bestMapThisGeneration = candidateMap;
+				bestMapThisGeneration = candidateMap.DeepClone();
 			}
 		}
 
@@ -138,6 +147,13 @@ public partial class MapBrain : Node
 		}
 
 		generationNumber++;
+		//yield return Timing.WaitForOneFrame;
+
+		// Debug
+		GD.Print("Generazione "+(generationNumber-1)+ " totale fitness: "+totalFitnessThisGeneration);
+		GD.Print("Fitness del miglior individuo: "+bestFitnessScoreThisGeneration);
+		// GD.Print("Miglior mappa della generazione: ");
+		// bestMapThisGeneration.Grid.PrintMapConsole();
 
 
 		if(!IsOutOfResources())
@@ -146,27 +162,55 @@ public partial class MapBrain : Node
 		
 			while(nextGeneration.Count < populationSize)
 			{
+				// Selection
 				CandidateMap parent1 = currentGeneration[RouletteWheelSelection()];
 				CandidateMap parent2 = currentGeneration[RouletteWheelSelection()];
 
+				// Crossover
 				CandidateMap child1, child2;
 
 				SinglePointCrossover(parent1, parent2, out child1, out child2);
 
-				//TODO: Mutation
+				// Mutation
+				BitflipMutation(child1);
+				BitflipMutation(child2);
+
+				nextGeneration.Add(child1);
+				nextGeneration.Add(child2);
 			}
 
 			currentGeneration = nextGeneration;
+
+			GeneticAlgorithm();
 		}
-
-
+		else
+		{
+			ShowResults();
+		}
 	}
 
-	/// <summary>
-	/// Controlla se si ha ancora a disposizione del budget di ricerca
-	/// </summary>
-	/// <returns>true: se il budget è finito, false altrimenti</returns>
-	private bool IsOutOfResources()
+	private void ShowResults()
+    {
+        isAlgorithmRunning = false;
+		GD.Print("Miglior mappa: ");
+		mapVisualizer.GenerateMap(bestMap.Grid);
+		bestMap.Grid.PrintMapConsole();
+
+		GD.Print("Soluzione migliore alla generazione "+bestMapGenerationNumber+" with score: "+bestFitnessScoreAllTime);
+		GD.Print("Lunghezza del percorso: "+bestMap.Path.Count);
+		GD.Print("Numero di curve: "+bestMap.CornersList.Count);
+
+		endDate = DateTime.Now;
+		long elapsedTicks = endDate.Ticks - startDate.Ticks;
+		TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
+		GD.Print("Tempo di esecuzione "+elapsedSpan);
+    }
+
+    /// <summary>
+    /// Controlla se si ha ancora a disposizione del budget di ricerca
+    /// </summary>
+    /// <returns>true: se il budget è finito, false altrimenti</returns>
+    private bool IsOutOfResources()
 	{
 		// Controllo per il numero di generazioni come budget
 		if(generationNumber < generationLimit)
@@ -188,7 +232,7 @@ public partial class MapBrain : Node
 	/// </summary>
 	/// <param name="candidateMap">La mappa candidata per cui vogliamo calcolare il valore di fitness</param>
 	/// <returns>Il valore di fitness associato ad una mappa candidata</returns>
-	public int CalculateFitness(CandidateMap candidateMap) // Il metodo deve essere private, è public per DEBUG
+	private int CalculateFitness(CandidateMap candidateMap) 
 	{
 		int numberOfObstacles = candidateMap.Obstacles.Where(isObstacle => isObstacle).Count();
 		int numberOfCorners = candidateMap.CornersList.Count;
@@ -292,8 +336,11 @@ public partial class MapBrain : Node
 
 		for (int i = 0; i < candidateMap.Obstacles.Length; i++)
 		{
-			if (rand.Next(0, 100) < mutationRate)
+			int rng = rand.Next(0, 100);
+			//GD.Print("Random number: "+rng);
+			if (rng < mutationRate)
 			{
+				//GD.Print("Obstacle mutated!");
 				bool obstacleAtIndex = candidateMap.IsObstacleAt(i);
 				candidateMap.PlaceObstacle(i, !obstacleAtIndex);
 			}
@@ -306,32 +353,7 @@ public partial class MapBrain : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		// DEBUG
-		grid = new Map(mapWidth, mapHeight);
-
-		GD.Print("Creo la mappa vuota");
-		grid.CreateMap();
-		grid.PrintMapConsole();
-
-
-		GD.Print("Imposto casualmente entrata ed uscita...");
-
-
-		MapHelper.ChooseAndSetStartExit(grid, ref startPosition, ref exitPosition, randomStartAndEnd, startPositionEdge, exitPositionEdge);
-		grid.PrintMapConsole();
-
-		GD.Print("Creo la candidate map con gli ostacoli...");
-		CandidateMap candidateMap = new CandidateMap(grid, numberOfKnightPieces);
-		candidateMap.GenerateCandidateMap(startPosition, exitPosition, grid, mapWidth, mapHeight, true);
-		grid.PrintMapConsole();
-
-		mapVisualizer.GenerateMap(grid);
-		GD.Print("Lunghezza percorso: "+candidateMap.Path.Count);
-		GD.Print("Numero di ostacoli: "+candidateMap.Obstacles.Where(isObstacle => isObstacle).Count());
-		GD.Print("Numero di curve: "+candidateMap.CornersList.Count);
-		GD.Print("Numero di curve consecutive: " +candidateMap.ConsecutiveCornersCount);
-
-		GD.Print("Valore di fitness: "+CalculateFitness(candidateMap));
+		RunAlgorithm();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

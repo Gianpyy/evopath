@@ -36,13 +36,13 @@ public class CandidateMap
 
 	public CandidateMap(CandidateMap candidateMap)
 	{
-		grid = candidateMap.grid;
+		grid = candidateMap.grid.DeepClone();
 		obstacles = (bool[]) candidateMap.obstacles.Clone();
 		startPoint = candidateMap.startPoint;
 		exitPoint = candidateMap.exitPoint;
 		cornersList = new List<Vector2>(candidateMap.cornersList);
 		consecutiveCornersCount = candidateMap.consecutiveCornersCount;
-		path = new List<Vector2>(path);
+		path = new List<Vector2>(candidateMap.path);
 	}
 
 	/// <summary>
@@ -55,19 +55,30 @@ public class CandidateMap
 	{
 		startPoint = startPos;
 		exitPoint = exitPos;
+		obstacles = new bool[grid.Width*grid.Height];
+
 
 		RandomlyPlaceKnightPieces(nPieces);
 		PlaceKnightObstacles();
-		FindPath();
+		//FindPath();
 		
-		if (autoRepair) 
+		//if (autoRepair) 
+		//{
+		//	Repair();
+       // }
+
+		for(int i = 0;i < obstacles.Length; i++)
 		{
-			Repair();
-        }
+			if(obstacles[i])
+			{
+				Vector2 pos = grid.CalculateCoordinatesFromIndex(i);
+				grid.SetCell(pos.X,pos.Y,CellObjectType.Obstacle);
+			}
+		}
 
 		// Debug
-		cornersList = GetListOfCorners(path);
-		consecutiveCornersCount = CalculateConsecutiveCorners(cornersList);
+		//cornersList = GetListOfCorners(path);
+		//consecutiveCornersCount = CalculateConsecutiveCorners(cornersList);
 			
 	}
 
@@ -114,7 +125,7 @@ public class CandidateMap
 
 				obstacles[randomIndex] = true;
 				knightPiecesList.Add(new KnightPiece(coordinates));
-				GD.Print(coordinates.X+" "+coordinates.Y);
+				//GD.Print(coordinates.X+" "+coordinates.Y);
 				count--;
 			}
 
@@ -160,10 +171,10 @@ public class CandidateMap
 		cornersList = GetListOfCorners(path);
 		consecutiveCornersCount = CalculateConsecutiveCorners(cornersList);
 
-		// Debug
 		foreach(Vector2 position in path)
 		{
-			GD.Print(position);
+			// Debug
+			//GD.Print(position);
 			if (position != exitPoint)
 				grid.SetCell(position.X, position.Y, CellObjectType.Road);
 		}
@@ -195,7 +206,7 @@ public class CandidateMap
 				}
 
 				FindPath();
-			} while (this.path.Count <= 0);
+			} while (path.Count <= 0);
 		}
 
 		foreach(Vector2 obstaclePosition in obstaclesToRemove) 
@@ -208,7 +219,8 @@ public class CandidateMap
                 obstacles[index] = true;
 			}
 
-			GD.Print(s);
+			// Debug
+			//GD.Print(s);
         }
 
 		return obstaclesToRemove;
@@ -286,7 +298,7 @@ public class CandidateMap
 	{
 		obstacles[index] = isObstacle;
 	}
-
+	
 	// Getters
 	public Map Grid {get => grid;}
 
