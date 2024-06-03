@@ -7,4 +7,7 @@
     <RootNamespace>GeneticMapGeneration</RootNamespace>
     <!-- <DocumentationFile>bin\Debug\netstandard2.1\MyProject.xml</DocumentationFile> --> <!-- Documentazione XML-->
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.1.3" />
+  </ItemGroup>
 </Project>

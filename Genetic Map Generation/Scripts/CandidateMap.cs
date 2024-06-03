@@ -171,12 +171,9 @@ public class CandidateMap
 		cornersList = GetListOfCorners(path);
 		consecutiveCornersCount = CalculateConsecutiveCorners(cornersList);
 
-		foreach(Vector2 position in path)
+		for(int i = 0; i < path.Count-1; i++)
 		{
-			// Debug
-			//GD.Print(position);
-			if (position != exitPoint)
-				grid.SetCell(position.X, position.Y, CellObjectType.Road);
+			grid.SetCell(path[i].X,path[i].Y,CellObjectType.Road);
 		}
 	}
 
@@ -224,6 +221,14 @@ public class CandidateMap
         }
 
 		return obstaclesToRemove;
+	}
+
+	public void ClearPath()
+	{
+		for(int i = 0; i < path.Count-1; i++)
+		{
+			grid.SetCell(path[i].X,path[i].Y,CellObjectType.Empty);
+		}
 	}
 
 	// -- Metodi per algoritmo genetico --

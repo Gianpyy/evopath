@@ -14,9 +14,9 @@ public partial class MapBrain : Node
 	// Dimensione della popolazione iniziale
 	[Export] private int populationSize = 10; 
 	// Tasso di crossover
-	[Export] private int crossoverRate = 0;
+	[Export] private int crossoverRate = 100;
 	// Tasso di mutazione
-	[Export] private int mutationRate = 0;
+	[Export] private int mutationRate = 5;
 	// Limite di generazioni
 	[Export] private int generationLimit = 10; 
 
@@ -63,6 +63,8 @@ public partial class MapBrain : Node
 	[Export] private MapVisualizer mapVisualizer;
 	DateTime startDate, endDate;
 
+	private int [] fitnessArray;
+
     /// <summary>
     /// Avvia l'algoritmo
     /// </summary>
@@ -91,6 +93,9 @@ public partial class MapBrain : Node
 		bestMap = null;
 		bestMapGenerationNumber = 0;
 		generationNumber = 1; 
+
+		// Debug
+		fitnessArray = new int[generationLimit];
 	}
 
 	/// <summary>
@@ -124,6 +129,7 @@ public partial class MapBrain : Node
 
 		foreach(CandidateMap candidateMap in currentGeneration)
 		{
+			candidateMap.ClearPath();
 			candidateMap.FindPath();
 			candidateMap.Repair();
 
@@ -146,14 +152,20 @@ public partial class MapBrain : Node
 			bestMapGenerationNumber = generationNumber;
 		}
 
+		
+		// Debug
+		GD.Print("Generazione "+generationNumber+ " totale fitness: "+totalFitnessThisGeneration);
+		GD.Print("Fitness del miglior individuo: "+bestFitnessScoreThisGeneration);
+
+		fitnessArray[generationNumber-1] = bestFitnessScoreThisGeneration;
+
 		generationNumber++;
 		//yield return Timing.WaitForOneFrame;
 
-		// Debug
-		GD.Print("Generazione "+(generationNumber-1)+ " totale fitness: "+totalFitnessThisGeneration);
-		GD.Print("Fitness del miglior individuo: "+bestFitnessScoreThisGeneration);
 		// GD.Print("Miglior mappa della generazione: ");
 		// bestMapThisGeneration.Grid.PrintMapConsole();
+
+		
 
 
 		if(!IsOutOfResources())
@@ -196,7 +208,7 @@ public partial class MapBrain : Node
 		mapVisualizer.GenerateMap(bestMap.Grid);
 		bestMap.Grid.PrintMapConsole();
 
-		GD.Print("Soluzione migliore alla generazione "+bestMapGenerationNumber+" with score: "+bestFitnessScoreAllTime);
+		GD.Print("Soluzione migliore alla generazione "+bestMapGenerationNumber+" con il punteggio: "+bestFitnessScoreAllTime);
 		GD.Print("Lunghezza del percorso: "+bestMap.Path.Count);
 		GD.Print("Numero di curve: "+bestMap.CornersList.Count);
 
@@ -213,7 +225,7 @@ public partial class MapBrain : Node
     private bool IsOutOfResources()
 	{
 		// Controllo per il numero di generazioni come budget
-		if(generationNumber < generationLimit)
+		if(generationNumber <= generationLimit)
 			return false;
 		else
 			return true;
@@ -354,6 +366,9 @@ public partial class MapBrain : Node
 	public override void _Ready()
 	{
 		RunAlgorithm();
+
+		DataAnalysis da = new DataAnalysis();
+		da.TestWrite(fitnessArray);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
