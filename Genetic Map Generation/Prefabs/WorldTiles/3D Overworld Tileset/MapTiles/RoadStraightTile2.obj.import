@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://do4fhmj1oeows"
+path="res://.godot/imported/RoadStraightTile2.obj-e44a81416144f923574c39885014198e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/RoadStraightTile2.obj-e44a81416144f923574c39885014198e.mesh"]
+
+source_file="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/RoadStraightTile2.obj"
+dest_files=["res://.godot/imported/RoadStraightTile2.obj-e44a81416144f923574c39885014198e.mesh", "res://.godot/imported/RoadStraightTile2.obj-e44a81416144f923574c39885014198e.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

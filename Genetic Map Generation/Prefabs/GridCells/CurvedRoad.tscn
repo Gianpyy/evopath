@@ -1,9 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7opg0rfceh25"]
+[gd_scene load_steps=4 format=3 uid="uid://b7opg0rfceh25"]
 
-[ext_resource type="ArrayMesh" uid="uid://cvud55s0wlrda" path="res://Prefabs/WorldTiles/3D Overworld Tileset/tiles_land/Overworld_Land_16.obj" id="1_j642s"]
+[ext_resource type="Texture2D" uid="uid://c7fmbihtqkt2l" path="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/Textures/Overworld_Land_15.png" id="1_f3g4o"]
+[ext_resource type="ArrayMesh" uid="uid://cvud55s0wlrda" path="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/RoadCornerTile.obj" id="2_3tdd8"]
 
-[node name="Road" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0gbwf"]
+albedo_texture = ExtResource("1_f3g4o")
 
-[node name="OverworldLand16" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1.25, -1.09278e-07, 0, 1.09278e-07, -1.25, 0, 0, 0, 1.25, 2, 0, 2)
-mesh = ExtResource("1_j642s")
+[node name="CurvedRoad" type="Node3D"]
+
+[node name="RoadCornerTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.25, 1.09278e-07, 0, -1.09278e-07, -1.25, 0, 0, 0, 1.25, 2, 0, 2)
+material_override = SubResource("StandardMaterial3D_0gbwf")
+mesh = ExtResource("2_3tdd8")

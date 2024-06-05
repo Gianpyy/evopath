@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://c0mpbgf46cr4o"
+path="res://.godot/imported/Exit1Tile.obj-8dacbc5efbb212a4c5772ad658fbd188.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Exit1Tile.obj-8dacbc5efbb212a4c5772ad658fbd188.mesh"]
+
+source_file="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/Exit1Tile.obj"
+dest_files=["res://.godot/imported/Exit1Tile.obj-8dacbc5efbb212a4c5772ad658fbd188.mesh", "res://.godot/imported/Exit1Tile.obj-8dacbc5efbb212a4c5772ad658fbd188.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

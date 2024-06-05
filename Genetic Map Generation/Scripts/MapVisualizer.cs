@@ -5,10 +5,16 @@ public partial class MapVisualizer : Node3D
 {
 	[Export]
     public PackedScene grassObj, roadObj, curvedRoadObj, startObj, exitObj, knightObj, obstacleObj;
+	[Export]
+	public PackedScene seasShoreObj, seasShoreCornerObj, seaObj;
+
+	private int mapSize;
+	[Export]
+	private int outSize = 5;
 
     public void GenerateMap(Map map)
     {
-       
+
 
         for (int i = 0; i < map.Width; i++)
         {
@@ -137,5 +143,91 @@ public partial class MapVisualizer : Node3D
                 
             }
         }
+
+		       
+	   	// Prendiamo la width poiché è una grid MxM, quindi non fa differenza
+	   	mapSize = map.Width;
+		
+		// Creazione bordo e esterno della mappa centrale
+		GenerateMapBorder();
+		GenerateOuterMap();
+
+		
     }
+
+	// Creates the sea around the map of outSize width
+	private void GenerateOuterMap()
+	{
+
+		for(int i = outSize*(-1); i < mapSize+outSize; i++)
+		{
+			for(int j = outSize*(-1);j < mapSize+outSize; j++)
+			{
+				if(!(i >= -1 && j>=-1 && i<=mapSize && j<=mapSize))
+				{
+		
+					Node3D seaNode =(Node3D) seaObj.Instantiate();
+					seaNode.Position = new Vector3I(i*4,0,j*4);	
+					AddChild(seaNode);
+				}
+					
+			}
+
+		}
+	}
+
+	private void GenerateMapBorder()
+	{
+		// Border angles
+		// (0,0) [sopra a sinistra]
+		Node3D cornerObj =(Node3D) seasShoreCornerObj.Instantiate();
+		cornerObj.Position = new Vector3I(-4,0,-4);	
+		((MeshInstance3D)cornerObj.GetChild(0)).RotateY(Mathf.DegToRad(180));
+		AddChild(cornerObj);
+
+		// (mapWidth,0) [sopra a destra]
+		cornerObj =(Node3D) seasShoreCornerObj.Instantiate();
+		cornerObj.Position = new Vector3I(-4,0,mapSize*4);	
+		((MeshInstance3D)cornerObj.GetChild(0)).RotateY(Mathf.DegToRad(270));
+		AddChild(cornerObj);
+
+		// (0, mapHeight) [sotto a sinistra]
+		cornerObj =(Node3D) seasShoreCornerObj.Instantiate();
+		cornerObj.Position = new Vector3I(mapSize*4,0,-4);	
+		((MeshInstance3D)cornerObj.GetChild(0)).RotateY(Mathf.DegToRad(90));
+		AddChild(cornerObj);
+
+		// (mapWidth, mapHeight) [sotto a destra]
+		cornerObj =(Node3D) seasShoreCornerObj.Instantiate();
+		cornerObj.Position = new Vector3I(mapSize*4,0,mapSize*4);
+		AddChild(cornerObj);
+
+		
+		// Bordi orizzontali
+		for (int i = 0; i < mapSize; i++)
+        {
+            Node3D spawnObj = (Node3D)seasShoreObj.Instantiate();
+			((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(90));
+			spawnObj.Position = new Vector3I(mapSize*4,0,i*4);
+			AddChild(spawnObj);
+
+			spawnObj = (Node3D)seasShoreObj.Instantiate();
+			((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(-90));
+			spawnObj.Position = new Vector3I(-4,0,i*4);
+			AddChild(spawnObj);
+		}
+
+		// Bordi verticali
+		for (int i = 0; i < mapSize; i++)
+        {
+            Node3D spawnObj = (Node3D)seasShoreObj.Instantiate();
+			spawnObj.Position = new Vector3I(i*4,0,mapSize*4);
+			AddChild(spawnObj);
+
+			spawnObj = (Node3D)seasShoreObj.Instantiate();
+			((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(-180));
+			spawnObj.Position = new Vector3I(i*4,0,-4);
+			AddChild(spawnObj);
+		}
+	}
 }

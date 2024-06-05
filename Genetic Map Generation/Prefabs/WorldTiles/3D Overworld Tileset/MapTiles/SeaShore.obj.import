@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://8un8wnq6pyaj"
+path="res://.godot/imported/SeaShore.obj-93337d85a7860bb43253e7b85e9d903f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/SeaShore.obj-93337d85a7860bb43253e7b85e9d903f.mesh"]
+
+source_file="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/SeaShore.obj"
+dest_files=["res://.godot/imported/SeaShore.obj-93337d85a7860bb43253e7b85e9d903f.mesh", "res://.godot/imported/SeaShore.obj-93337d85a7860bb43253e7b85e9d903f.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

@@ -1,9 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://brusrreih61qr"]
+[gd_scene load_steps=4 format=3 uid="uid://brusrreih61qr"]
 
-[ext_resource type="ArrayMesh" uid="uid://dvooxmaapev5m" path="res://Prefabs/WorldTiles/3D Overworld Tileset/tiles_land/Overworld_Land_02.obj" id="1_px03s"]
+[ext_resource type="Texture2D" uid="uid://06b62v4v5dj0" path="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/Textures/GrassTileTexture.png" id="1_37qx4"]
+[ext_resource type="ArrayMesh" uid="uid://b8o08eblhprwf" path="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/GrassTile.obj" id="2_rfa3c"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ktnd2"]
+albedo_texture = ExtResource("1_37qx4")
 
 [node name="Grass" type="Node3D"]
 
-[node name="OverworldLand02" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.25, 0, 0, 0, -1.25, -1.88745e-07, 0, 1.88745e-07, -1.25, 2, 0, 2)
-mesh = ExtResource("1_px03s")
+[node name="GrassTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.25, 0, 0, 0, -1.25, 0, 0, 0, -1.25, 2, 0, 2)
+material_override = SubResource("StandardMaterial3D_ktnd2")
+mesh = ExtResource("2_rfa3c")

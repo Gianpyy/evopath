@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://l5i4sqxty74x"]
+
+[ext_resource type="ArrayMesh" uid="uid://heie44iu0afo" path="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/SeaTile.obj" id="1_evg53"]
+[ext_resource type="Texture2D" uid="uid://btcklja1dhdmr" path="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/Textures/Overworld_Ocean_10.png" id="3_wf8l8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nx0yj"]
+albedo_texture = ExtResource("3_wf8l8")
+
+[node name="Sea" type="Node3D"]
+
+[node name="SeaTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.25, 1.09278e-07, 0, -1.09278e-07, -1.25, 0, 0, 0, 1.25, 2, 0, 2)
+material_override = SubResource("StandardMaterial3D_nx0yj")
+mesh = ExtResource("1_evg53")

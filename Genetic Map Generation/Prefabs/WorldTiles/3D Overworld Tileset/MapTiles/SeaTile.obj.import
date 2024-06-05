@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://heie44iu0afo"
+path="res://.godot/imported/SeaTile.obj-bd7c9a69186d096a8ac00bffaba8a331.mesh"
+
+[deps]
+
+files=["res://.godot/imported/SeaTile.obj-bd7c9a69186d096a8ac00bffaba8a331.mesh"]
+
+source_file="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/SeaTile.obj"
+dest_files=["res://.godot/imported/SeaTile.obj-bd7c9a69186d096a8ac00bffaba8a331.mesh", "res://.godot/imported/SeaTile.obj-bd7c9a69186d096a8ac00bffaba8a331.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

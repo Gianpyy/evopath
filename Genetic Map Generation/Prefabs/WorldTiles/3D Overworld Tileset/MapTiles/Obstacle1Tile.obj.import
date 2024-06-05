@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://buthsecsdbj0k"
+path="res://.godot/imported/Obstacle1Tile.obj-34ab3a9da28e6ed293c124c15a4e1050.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Obstacle1Tile.obj-34ab3a9da28e6ed293c124c15a4e1050.mesh"]
+
+source_file="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/Obstacle1Tile.obj"
+dest_files=["res://.godot/imported/Obstacle1Tile.obj-34ab3a9da28e6ed293c124c15a4e1050.mesh", "res://.godot/imported/Obstacle1Tile.obj-34ab3a9da28e6ed293c124c15a4e1050.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false
