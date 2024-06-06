@@ -62,7 +62,6 @@ public partial class MapBrain : Node
 	// DEBUG
 	[Export] private MapVisualizer mapVisualizer;
 	DateTime startDate, endDate;
-
 	private int [] fitnessArray;
 
     /// <summary>
@@ -367,8 +366,23 @@ public partial class MapBrain : Node
 	{
 		RunAlgorithm();
 
+		GD.Print("-------------------------------------------------");
+		GD.Print("Salvataggio dei dati in Excel...");
 		DataAnalysis da = new DataAnalysis();
-		da.TestWrite(fitnessArray);
+		da.WriteDataInSheet(fitnessArray, new GeneticAlgorithmConfiguration{
+			populationSize = this.populationSize,
+			generationLimit = this.generationLimit,
+			crossverRate = this.crossoverRate,
+			mutationRate = this.mutationRate,
+			fitnessCornerMin = this.fitnessCornerMin,
+			fitnessCornerMax = this.fitnessCornerMax,
+			fitnessCornerWeight = this.fitnessCornerWeight,
+			fitnessObstacleWeight = this.fitnessObstacleWeight,
+			fitnessPathWeight = this.fitnessPathWeight,
+			mapWidth = this.mapWidth,
+			mapHeight = this.mapHeight,
+			numberOfPieces = this.numberOfKnightPieces,
+		});
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
