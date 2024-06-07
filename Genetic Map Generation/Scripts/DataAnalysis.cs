@@ -154,7 +154,7 @@ public class DataAnalysis
                 string parameterToCheck = (string) worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + sheetIndex].Value;
 
                 double parameterValue = (double) worksheet.Cells[GeneticAlgorithmConfigurationDataCol + sheetIndex].Value;
-                int configurationValue = (int) fieldsDictionary[parameterToCheck];   
+                float configurationValue =  Convert.ToSingle(fieldsDictionary[parameterToCheck]);   
 
                 if (parameterValue != configurationValue)
                 {

@@ -30,14 +30,8 @@ public class Map
 		{
 			for(int col = 0; col < width; col++)
 			{
-				map[row, col] = new Cell(col, row); // !
-
-				//DEBUG
-				Array values = Enum.GetValues(typeof(Piece));
-				Random random = new Random();
-				Piece randomBar = (Piece)values.GetValue(random.Next(values.Length));
-				map[row,col].PieceType = randomBar;
-
+				map[row, col] = new Cell(col, row);
+				
 			}
 		}
 	}
@@ -114,6 +108,7 @@ public class Map
 
 		return new Vector2(x, z);
 	}
+	
 	
 	// DEBUG
 	// Stampa la mappa nella console di debug

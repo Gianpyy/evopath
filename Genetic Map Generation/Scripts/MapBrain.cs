@@ -27,9 +27,9 @@ public partial class MapBrain : Node
 	// Generazione corrente
 	private List<CandidateMap> currentGeneration;
 	// Fitness totale per la generazione corrente
-	private int totalFitnessThisGeneration;
+	private float totalFitnessThisGeneration;
 	// Miglior fitness tra tutte le generazioni
-	private int bestFitnessScoreAllTime = 0;
+	private float bestFitnessScoreAllTime = 0;
 	// Miglior individuo tra tutte le generazioni
 	private CandidateMap bestMap = null;
 	// L'indice della generazione con il miglior individuo
@@ -44,11 +44,11 @@ public partial class MapBrain : Node
 	// Il numero massimo di curve
 	[Export] private int fitnessCornerMax = 12;
 	// Il peso che ha il numero di curve sul valore di fitness 
-	[Export] private int fitnessCornerWeight = 1;
+	[Export] private float fitnessCornerWeight = 1;
 	// Il peso che ha il numero di ostacoli sul valore di fitness 
-	[Export] private int fitnessObstacleWeight = 1;
+	[Export] private float fitnessObstacleWeight = 1;
 	// Il peso che ha la lunghezza del percorso sul valore di fitness 
-	[Export] private int fitnessPathWeight = 1;
+	[Export] private float fitnessPathWeight = 1;
 
 	// --- Variabili della mappa ---
 
@@ -94,7 +94,7 @@ public partial class MapBrain : Node
 		generationNumber = 1; 
 
 		// Debug
-		geneticAlgorithmData.fitnessArray = new int[generationLimit];
+		geneticAlgorithmData.fitnessArray = new float[generationLimit];
 	}
 
 	/// <summary>
@@ -123,7 +123,7 @@ public partial class MapBrain : Node
 	private void GeneticAlgorithm()
 	{
 		totalFitnessThisGeneration = 0;
-		int bestFitnessScoreThisGeneration = 0;
+		float bestFitnessScoreThisGeneration = 0;
 		CandidateMap bestMapThisGeneration = null;
 
 		foreach(CandidateMap candidateMap in currentGeneration)
@@ -132,7 +132,7 @@ public partial class MapBrain : Node
 			candidateMap.FindPath();
 			candidateMap.Repair();
 
-			int fitness = CalculateFitness(candidateMap);
+			float fitness = CalculateFitness(candidateMap);
 			
 			totalFitnessThisGeneration += fitness;
 			
@@ -203,6 +203,9 @@ public partial class MapBrain : Node
 	private void ShowResults()
     {
         isAlgorithmRunning = false;
+
+		bestMap.RebuildGrid();
+
 		GD.Print("Miglior mappa: ");
 		mapVisualizer.GenerateMap(bestMap.Grid, bestMap.Path);
 		bestMap.Grid.PrintMapConsole();
@@ -210,6 +213,7 @@ public partial class MapBrain : Node
 		GD.Print("Soluzione migliore alla generazione "+bestMapGenerationNumber+" con il punteggio: "+bestFitnessScoreAllTime);
 		GD.Print("Lunghezza del percorso: "+bestMap.Path.Count);
 		GD.Print("Numero di curve: "+bestMap.CornersList.Count);
+		GD.Print("Numero di ostacoli: "+bestMap.Obstacles.Count(isObstacle => isObstacle));
 
 		endDate = DateTime.Now;
 		long elapsedTicks = endDate.Ticks - startDate.Ticks;
@@ -249,7 +253,7 @@ public partial class MapBrain : Node
 	/// </summary>
 	/// <param name="candidateMap">La mappa candidata per cui vogliamo calcolare il valore di fitness</param>
 	/// <returns>Il valore di fitness associato ad una mappa candidata</returns>
-	private int CalculateFitness(CandidateMap candidateMap) 
+	private float CalculateFitness(CandidateMap candidateMap) 
 	{
 		int numberOfObstacles = candidateMap.Obstacles.Where(isObstacle => isObstacle).Count();
 		int numberOfCorners = candidateMap.CornersList.Count;
@@ -257,7 +261,7 @@ public partial class MapBrain : Node
 		// -- Calcolo del valore di fitness --
 
 		// Il valore finale della funzione di fitness
-		int fitnessScore = 0; 
+		float fitnessScore = 0; 
 		
 		// Aggiunta la lunghezza del percorso
 		fitnessScore += candidateMap.Path.Count * fitnessPathWeight;
@@ -287,7 +291,9 @@ public partial class MapBrain : Node
 			fitnessScore -= fitnessCornerMin * fitnessCornerWeight;
 		}
 
-		return fitnessScore;
+		float weightSum = fitnessCornerWeight + fitnessObstacleWeight + fitnessPathWeight;
+
+		return fitnessScore/weightSum;
 	}
 
 	/// <summary>
@@ -301,7 +307,7 @@ public partial class MapBrain : Node
 	{
 		Random rand = new Random();
 		
-		int randomValue = rand.Next(0, totalFitnessThisGeneration);
+		float randomValue = rand.Next(0, (int)totalFitnessThisGeneration);
 
 		for (int i = 0; i < populationSize; i++)
 		{

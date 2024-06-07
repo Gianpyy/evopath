@@ -57,7 +57,6 @@ public class CandidateMap
 		exitPoint = exitPos;
 		obstacles = new bool[grid.Width*grid.Height];
 
-
 		RandomlyPlaceKnightPieces(nPieces);
 		PlaceKnightObstacles();
 		//FindPath();
@@ -75,6 +74,9 @@ public class CandidateMap
 				grid.SetCell(pos.X,pos.Y,CellObjectType.Obstacle);
 			}
 		}
+
+		
+		GD.Print(obstacles.Count(isObstacle => isObstacle));
 
 		// Debug
 		//cornersList = GetListOfCorners(path);
@@ -303,6 +305,29 @@ public class CandidateMap
 	{
 		obstacles[index] = isObstacle;
 	}
+
+	public void RebuildGrid()
+	{
+		grid.CreateMap();
+
+		foreach(Vector2 road in path)
+		{
+			grid.SetCell(road.X,road.Y,CellObjectType.Road);
+		}
+
+		for(int i = 0; i < obstacles.Length; i++)
+		{
+			if(obstacles[i])
+			{
+				Vector2 coordinates = grid.CalculateCoordinatesFromIndex(i);
+				grid.SetCell(coordinates.X,coordinates.Y,CellObjectType.Obstacle);
+			}
+			
+		}
+
+		grid.SetCell(startPoint.X,startPoint.Y,CellObjectType.Start);
+		grid.SetCell(exitPoint.X,exitPoint.Y,CellObjectType.Exit);
+	}
 	
 	// Getters
 	public Map Grid {get => grid;}
@@ -335,7 +360,7 @@ public class CandidateMap
 	public void GenerateCandidateMap(Vector2 startPos,Vector2 exitPos, Map grid, int width, int height, bool autoRepair = false)
 	{
 		obstacles = new bool[width*height];
-
+		
 		CreateCandidateMap(startPos,exitPos, autoRepair);
 
 		// Possibile miglioria: contraddistinguere i KnightPiece dagli ostacoli (potrebbe tornare utile per mettere asset diversi)

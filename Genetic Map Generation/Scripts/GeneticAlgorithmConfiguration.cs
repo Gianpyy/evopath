@@ -6,9 +6,9 @@ public struct GeneticAlgorithmConfiguration
 	public int mutationRate;
 	public int fitnessCornerMin;
 	public int fitnessCornerMax;
-	public int fitnessCornerWeight;
-	public int fitnessObstacleWeight;
-	public int fitnessPathWeight;
+	public float fitnessCornerWeight;
+	public float fitnessObstacleWeight;
+	public float fitnessPathWeight;
 	public int mapWidth;
 	public int mapHeight;
 	public int numberOfPieces;

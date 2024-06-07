@@ -57,10 +57,10 @@ text = "Show data"
 [node name="ItemList" type="ItemList" parent="."]
 visible = false
 layout_mode = 0
-offset_left = 929.0
-offset_top = 57.0
-offset_right = 1129.0
-offset_bottom = 537.0
+offset_left = 869.0
+offset_top = 55.0
+offset_right = 1122.0
+offset_bottom = 535.0
 
 [connection signal="button_down" from="CheckButton" to="." method="_on_check_button_button_down"]
 [connection signal="button_up" from="CheckButton" to="." method="_on_check_button_button_up"]
