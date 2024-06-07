@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Godot;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 //GA_1: SinglePoint crossover_10populationSize
 
@@ -23,7 +24,7 @@ public class DataAnalysis
     // Larghezze celle
     private const double GeneticAlgorithmConfigurationInfoColWidth = 20.50;
     private const double GeneticAlgorithmConfigurationDataColWidth = 9.40;
-    private const double GenerationNumberColWidth = 10.60;
+    private const double GenerationNumberColWidth = 20.30;
     private const double FitnessArrayColWidth = 21.00;
     
 
@@ -33,7 +34,7 @@ public class DataAnalysis
 	/// </summary>
 	/// <param name="fitnessArray">I valori di fitness da inserire nel foglio</param> 
     /// <param name="geneticAlgorithmConfiguration">La configurazione dell'algoritmo genetico</param>
-    public void WriteDataInSheet(int [] fitnessArray, GeneticAlgorithmConfiguration geneticAlgorithmConfiguration)
+    public void WriteDataInSheet(GeneticAlgorithmData geneticAlgorithmData, GeneticAlgorithmConfiguration geneticAlgorithmConfiguration)
     {
         // Impostazione del contesto della licenza EPPlus
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -48,7 +49,7 @@ public class DataAnalysis
             if (worksheetIndex != -1)
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[worksheetIndex];
-                InsertDataInExsistingSheet(fitnessArray, worksheet);
+                InsertDataInExsistingSheet(geneticAlgorithmData, worksheet);
                 package.Save();
 
                 string successString = "[color=green]Dati inseriti con successo in " + file.Name + ". [/color]";
@@ -56,7 +57,7 @@ public class DataAnalysis
             }
             else
             {
-                InsertDataInNewSheet(fitnessArray, geneticAlgorithmConfiguration, package);
+                InsertDataInNewSheet(geneticAlgorithmData, geneticAlgorithmConfiguration, package);
                 package.Save();
 
                 string successString = "[color=green]Dati inseriti con successo in " + file.Name + ". [/color]";
@@ -76,7 +77,7 @@ public class DataAnalysis
 	/// </summary>
 	/// <param name="fitnessArray">I valori di fitness da inserire nel foglio</param> 
     /// <param name="worksheet">Il foglio in cui inserire i dati</param>
-    private void InsertDataInExsistingSheet(int[] fitnessArray, ExcelWorksheet worksheet)
+    private void InsertDataInExsistingSheet(GeneticAlgorithmData geneticAlgorithmData, ExcelWorksheet worksheet)
     {
         // Cerco la colonna in cui inserire i dati
         int columnToInsertData = GetExcelColumnNumber(FitnessArrayStartingCol);
@@ -86,23 +87,42 @@ public class DataAnalysis
         }
         
         // Inserimento dati 
+        int offset = DataStartingRow;
         worksheet.Cells[DataStartingRow - 1, columnToInsertData].Value = "Fitness Miglior Individuo";
         
-        for (int i = 0, offset = DataStartingRow; i < fitnessArray.Length; i++, offset++)
+        for (int i = 0; i < geneticAlgorithmData.fitnessArray.Length; i++, offset++)
         {
             worksheet.Cells[GenerationNumberCol + offset].Value = i + 1;
-            worksheet.Cells[offset, columnToInsertData].Value = fitnessArray[i];
+            worksheet.Cells[offset, columnToInsertData].Value = geneticAlgorithmData.fitnessArray[i];
         }
+        worksheet.Cells[offset++, columnToInsertData].Value = geneticAlgorithmData.bestMapFitness;
+        worksheet.Cells[offset++, columnToInsertData].Value = geneticAlgorithmData.pathLenght;
+        worksheet.Cells[offset++, columnToInsertData].Value = geneticAlgorithmData.numberOfCorners;
+        worksheet.Cells[offset++, columnToInsertData].Value = geneticAlgorithmData.numberOfObstacles;
+        worksheet.Cells[offset, columnToInsertData].Value = geneticAlgorithmData.elapsedTime.ToString(@"hh\:mm\:ss\:fffff");
+
 
         // -- Formattazione stile -- 
 
         // Larghezza colonne
         worksheet.Column(columnToInsertData).Width = FitnessArrayColWidth;
         
-        // Formattazione testo 
+        // Formattazione parte di sopra 
         worksheet.Cells[DataStartingRow - 1, columnToInsertData].Style.Font.Bold = true;
-        ExcelRange range = worksheet.Cells[DataStartingRow - 1, columnToInsertData, DataStartingRow + fitnessArray.Length, columnToInsertData];
-        range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+        ExcelRange range = worksheet.Cells[DataStartingRow - 1, columnToInsertData, offset, columnToInsertData];
+        range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+        // Formattazione parte di sotto
+        range = worksheet.Cells[DataStartingRow + geneticAlgorithmData.fitnessArray.Length, columnToInsertData, offset, columnToInsertData];
+        range.Style.Font.Bold = true;
+
+        // Formattazione sfondo (parte di sotto)
+        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+
+        // Formattazione bordi (parte di sotto)
+        range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+
     }
 
     /// <summary>
@@ -157,7 +177,7 @@ public class DataAnalysis
     /// <param name="fitnessArray">I valori di fitness da inserire nel foglio</param> 
 	/// <param name="geneticAlgorithmConfiguration">La configurazione dell'algoritmo genetico</param>
     /// <param name="package">Il package di Excel</param>
-    private void InsertDataInNewSheet(int[] fitnessArray, GeneticAlgorithmConfiguration geneticAlgorithmConfiguration, ExcelPackage package)
+    private void InsertDataInNewSheet(GeneticAlgorithmData geneticAlgorithmData, GeneticAlgorithmConfiguration geneticAlgorithmConfiguration, ExcelPackage package)
     {
         int worksheetCount = package.Workbook.Worksheets.Count;
         ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Foglio" + (worksheetCount + 1));
@@ -171,7 +191,8 @@ public class DataAnalysis
         // Inserimento dati
         Type type = typeof(GeneticAlgorithmConfiguration);
         FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-        for (int i = 0, offset = DataStartingRow; i < fields.Length; i++, offset++)
+        int offset = DataStartingRow;
+        for (int i = 0; i < fields.Length; i++, offset++)
         {
             string fieldName = fields[i].Name;
             object fieldValue = fields[i].GetValue(geneticAlgorithmConfiguration);
@@ -180,20 +201,32 @@ public class DataAnalysis
             worksheet.Cells[GeneticAlgorithmConfigurationDataCol + offset].Value = fieldValue;
         }
 
-        // -- Inserimento dei dati di fitness --
+        // -- Inserimento dei dati  --
 
-        // Inserimento indice
+        // Inserimento indici
+        offset = DataStartingRow + geneticAlgorithmData.fitnessArray.Length;
         worksheet.Cells[GenerationNumberCol + (DataStartingRow - 1)].Value = "Generazione";
         worksheet.Cells[FitnessArrayStartingCol + (DataStartingRow - 1)].Value = "Fitness Miglior Individuo";
+        worksheet.Cells[GenerationNumberCol + offset++].Value = "Fitness miglior mappa";
+        worksheet.Cells[GenerationNumberCol + offset++].Value = "Lunghezza percorso";
+        worksheet.Cells[GenerationNumberCol + offset++].Value = "Numero curve";
+        worksheet.Cells[GenerationNumberCol + offset++].Value = "Numero ostacoli";
+        worksheet.Cells[GenerationNumberCol + offset].Value = "Tempo di esecuzione";
 
         // Inserimento dati
-        for (int i = 0, offset = DataStartingRow; i < fitnessArray.Length; i++, offset++)
+        offset = DataStartingRow;
+        for (int i = 0; i < geneticAlgorithmData.fitnessArray.Length; i++, offset++)
         {
             worksheet.Cells[GenerationNumberCol + offset].Value = i + 1;
-            worksheet.Cells[FitnessArrayStartingCol + offset].Value = fitnessArray[i];
+            worksheet.Cells[FitnessArrayStartingCol + offset].Value = geneticAlgorithmData.fitnessArray[i];
         }
+        worksheet.Cells[FitnessArrayStartingCol + offset++].Value = geneticAlgorithmData.bestMapFitness;
+        worksheet.Cells[FitnessArrayStartingCol + offset++].Value = geneticAlgorithmData.pathLenght;
+        worksheet.Cells[FitnessArrayStartingCol + offset++].Value = geneticAlgorithmData.numberOfCorners;
+        worksheet.Cells[FitnessArrayStartingCol + offset++].Value = geneticAlgorithmData.numberOfObstacles;
+        worksheet.Cells[FitnessArrayStartingCol + offset].Value = geneticAlgorithmData.elapsedTime.ToString(@"hh\:mm\:ss\:fffff");
 
-        // -- Formattazione stile -- 
+        // ---- Formattazione stile ---- 
 
         // Larghezza colonne
         int colIndex = GetExcelColumnNumber(GeneticAlgorithmConfigurationInfoCol);
@@ -205,19 +238,32 @@ public class DataAnalysis
         colIndex = GetExcelColumnNumber(FitnessArrayStartingCol);
         worksheet.Column(colIndex).Width = FitnessArrayColWidth;
 
-        // Formattazione testo 
+        // -- Formattazione dati relativi alla configurazione dell'algoritmo genetico --
+
+        // Formattazione sfondo 
         worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1) + ":" + GeneticAlgorithmConfigurationDataCol + (DataStartingRow - 1)].Merge = true;
         worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1)].Style.Font.Bold = true;
-        worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1)].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+        worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1)].Style.Fill.PatternType = ExcelFillStyle.Solid;
         worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1)].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
 
+        // Formattazione bordo
+        ExcelRange range = worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1) + ":" + GeneticAlgorithmConfigurationDataCol + (DataStartingRow - 1)];
+        range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
 
-        ExcelRange range = worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1) + ":" + GeneticAlgorithmConfigurationDataCol + (DataStartingRow + fields.Length - 1)];
-        range.Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+        // -- Formattazione dati --
 
-        range = worksheet.Cells[GenerationNumberCol + (DataStartingRow - 1) + ":" + FitnessArrayStartingCol + (DataStartingRow + fitnessArray.Length)];
-        range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+        // Formattazione parte di sopra
+        range = worksheet.Cells[GenerationNumberCol + (DataStartingRow - 1) + ":" + FitnessArrayStartingCol + (DataStartingRow + offset)];
+        range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        range = worksheet.Cells[GenerationNumberCol + (DataStartingRow - 1) + ":" + FitnessArrayStartingCol + (DataStartingRow -1)];
         range.Style.Font.Bold = true;
+
+        // Formattazione parte di sotto
+        range = worksheet.Cells[GenerationNumberCol + (DataStartingRow + geneticAlgorithmData.fitnessArray.Length) + ":" + FitnessArrayStartingCol + offset];
+        range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+        range.Style.Font.Bold = true;
+        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
     }
 
 

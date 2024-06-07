@@ -1,6 +1,3 @@
-using Godot;
-using System;
-
 public struct GeneticAlgorithmConfiguration 
 {
 	public int populationSize;

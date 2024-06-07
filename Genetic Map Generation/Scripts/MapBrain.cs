@@ -62,7 +62,7 @@ public partial class MapBrain : Node
 	// DEBUG
 	[Export] private MapVisualizer mapVisualizer;
 	DateTime startDate, endDate;
-	private int [] fitnessArray;
+	private GeneticAlgorithmData geneticAlgorithmData;
 
     /// <summary>
     /// Avvia l'algoritmo
@@ -94,7 +94,7 @@ public partial class MapBrain : Node
 		generationNumber = 1; 
 
 		// Debug
-		fitnessArray = new int[generationLimit];
+		geneticAlgorithmData.fitnessArray = new int[generationLimit];
 	}
 
 	/// <summary>
@@ -156,7 +156,7 @@ public partial class MapBrain : Node
 		GD.Print("Generazione "+generationNumber+ " totale fitness: "+totalFitnessThisGeneration);
 		GD.Print("Fitness del miglior individuo: "+bestFitnessScoreThisGeneration);
 
-		fitnessArray[generationNumber-1] = bestFitnessScoreThisGeneration;
+		geneticAlgorithmData.fitnessArray[generationNumber-1] = bestFitnessScoreThisGeneration;
 
 		generationNumber++;
 		//yield return Timing.WaitForOneFrame;
@@ -215,6 +215,12 @@ public partial class MapBrain : Node
 		long elapsedTicks = endDate.Ticks - startDate.Ticks;
 		TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
 		GD.Print("Tempo di esecuzione "+elapsedSpan);
+
+		geneticAlgorithmData.elapsedTime = elapsedSpan;
+		geneticAlgorithmData.bestMapFitness = CalculateFitness(bestMap);
+		geneticAlgorithmData.numberOfCorners = bestMap.CornersList.Count;
+		geneticAlgorithmData.numberOfObstacles = bestMap.Obstacles.Where(isObstacle => isObstacle).Count();
+		geneticAlgorithmData.pathLenght = bestMap.Path.Count;
     }
 
     /// <summary>
@@ -368,7 +374,7 @@ public partial class MapBrain : Node
 		GD.Print("-------------------------------------------------");
 		GD.Print("Salvataggio dei dati in Excel...");
 		DataAnalysis da = new DataAnalysis();
-		da.WriteDataInSheet(fitnessArray, new GeneticAlgorithmConfiguration{
+		da.WriteDataInSheet(geneticAlgorithmData, new GeneticAlgorithmConfiguration{
 			populationSize = this.populationSize,
 			generationLimit = this.generationLimit,
 			crossverRate = this.crossoverRate,
