@@ -1,5 +1,11 @@
 using Godot;
+using HCoroutines;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 public partial class MapVisualizer : Node3D
 {
@@ -7,14 +13,14 @@ public partial class MapVisualizer : Node3D
     public PackedScene grassObj, roadObj, curvedRoadObj, startObj, exitObj, knightObj, obstacleObj;
 	[Export]
 	public PackedScene seasShoreObj, seasShoreCornerObj, seaObj;
-
-	private int mapSize;
 	[Export]
 	private int outSize = 5;
+	private int mapSize;
+	[Export]
+	private int delay = 40;
 
-    public void GenerateMap(Map map)
+    public void GenerateMap(Map map, List<Vector2> path)
     {
-
 
         for (int i = 0; i < map.Width; i++)
         {
@@ -30,7 +36,7 @@ public partial class MapVisualizer : Node3D
 					break;
 
 					case CellObjectType.Road:
-						spawnObj = (Node3D)roadObj.Instantiate();
+						spawnObj = (Node3D)grassObj.Instantiate();
 					break;
 
 					case CellObjectType.Start:
@@ -60,91 +66,16 @@ public partial class MapVisualizer : Node3D
 
 				if(spawnObj!=null)
 				{
-					// i - 1 sopra
-					// i + 1 sotto
-					// j -1 sinistra
-					// j + 1 destra
-
-					//TODO: caso ipotetico start e exit affiancate -> genetic algorithm?
-
-					if (map.MapGrid[i, j].CellObjectType == CellObjectType.Road)
-					{
-						// Controllo sul lato sinistro
-						if (j - 1 >= 0 && j + 1 < map.Width &&
-							(map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Road ||
-							map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Start ||
-							map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Exit) &&
-							(map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Road ||
-							map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Start ||
-							map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Exit))
-						{
-							((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(90));
-						}
-
-						// Da sinistra a sopra
-						else if (i - 1 >= 0 && j - 1 >= 0 &&
-								(map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Road ||
-								map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Start ||
-								map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Exit) &&
-								(map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Road ||
-								map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Start ||
-								map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Exit))
-						{
-							spawnObj = (Node3D)curvedRoadObj.Instantiate();
-							((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(180));
-						}
-
-						// Da sotto a destra
-						else if (i + 1 < map.Height && j + 1 < map.Width &&
-								(map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Road ||
-								map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Start ||
-								map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Exit) &&
-								(map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Road ||
-								map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Start ||
-								map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Exit))
-						{
-							spawnObj = (Node3D)curvedRoadObj.Instantiate();
-							((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(0));  // Ruota di 0 gradi, opzionale
-						}
-
-						// Da sopra a destra
-						else if (i - 1 >= 0 && j + 1 < map.Width &&
-								(map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Road ||
-								map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Start ||
-								map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Exit) &&
-								(map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Road ||
-								map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Start ||
-								map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Exit))
-						{
-							spawnObj = (Node3D)curvedRoadObj.Instantiate();
-							((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(-90));
-						}
-
-						// Da sotto a sinistra
-						else if (i + 1 < map.Height && j - 1 >= 0 &&
-								(map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Road ||
-								map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Start ||
-								map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Exit) &&
-								(map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Road ||
-								map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Start ||
-								map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Exit))
-						{
-							spawnObj = (Node3D)curvedRoadObj.Instantiate();
-							((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(90));
-						}
-					}
-
 					
 					spawnObj.Position = new Vector3I(i*4,0,j*4);
 					spawnObj.Name = map.MapGrid[i, j].CellObjectType.ToString() + " ["+i+","+j+"]";
 					AddChild(spawnObj);
-					
+						
 				}
                 
             }
         }
-
-		       
+	       
 	   	// Prendiamo la width poiché è una grid MxM, quindi non fa differenza
 	   	mapSize = map.Width;
 		
@@ -152,8 +83,115 @@ public partial class MapVisualizer : Node3D
 		GenerateMapBorder();
 		GenerateOuterMap();
 
+		// Creazione strada con delay
+		GenerateRoadOnDelay(map, path);
 		
     }
+
+	
+
+	private async void GenerateRoadOnDelay(Map map, List<Vector2> roadList)
+	{
+		Node3D spawnObj;
+
+		foreach(Vector2 road in roadList)
+		{
+			int i =(int) road.Y;
+			int j =(int) road.X;
+					
+			// i - 1 sopra
+			// i + 1 sotto
+			// j -1 sinistra
+			// j + 1 destra
+			if (map.MapGrid[i, j].CellObjectType == CellObjectType.Road)
+			{
+				// Controllo sul lato sinistro
+				if (j - 1 >= 0 && j + 1 < map.Width &&
+					(map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Road ||
+					map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Start ||
+					map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Exit) &&
+					(map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Road ||
+					map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Start ||
+					map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Exit))
+				{
+					spawnObj = (Node3D)roadObj.Instantiate();
+					((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(90));
+				}
+
+				// Da sinistra a sopra
+				else if (i - 1 >= 0 && j - 1 >= 0 &&
+						(map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Road ||
+						map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Start ||
+						map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Exit) &&
+						(map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Road ||
+						map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Start ||
+						map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Exit))
+				{
+					spawnObj = (Node3D)curvedRoadObj.Instantiate();
+					((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(180));
+				}
+
+				// Da sotto a destra
+				else if (i + 1 < map.Height && j + 1 < map.Width &&
+						(map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Road ||
+						map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Start ||
+						map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Exit) &&
+						(map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Road ||
+						map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Start ||
+						map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Exit))
+				{
+					spawnObj = (Node3D)curvedRoadObj.Instantiate();
+					((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(0));  // Ruota di 0 gradi, opzionale
+				}
+
+				// Da sopra a destra
+				else if (i - 1 >= 0 && j + 1 < map.Width &&
+						(map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Road ||
+						map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Start ||
+						map.MapGrid[i - 1, j].CellObjectType == CellObjectType.Exit) &&
+						(map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Road ||
+						map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Start ||
+						map.MapGrid[i, j + 1].CellObjectType == CellObjectType.Exit))
+				{
+					spawnObj = (Node3D)curvedRoadObj.Instantiate();
+					((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(-90));
+				}
+
+				// Da sotto a sinistra
+				else if (i + 1 < map.Height && j - 1 >= 0 &&
+						(map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Road ||
+						map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Start ||
+						map.MapGrid[i + 1, j].CellObjectType == CellObjectType.Exit) &&
+						(map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Road ||
+						map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Start ||
+						map.MapGrid[i, j - 1].CellObjectType == CellObjectType.Exit))
+				{
+					spawnObj = (Node3D)curvedRoadObj.Instantiate();
+					((MeshInstance3D)spawnObj.GetChild(0)).RotateY(Mathf.DegToRad(90));
+				}
+
+				// Da sopra a sotto (standard road tile)
+				else
+				{
+					spawnObj = (Node3D)roadObj.Instantiate();
+				}
+				
+				//TODO: rimuovere il tile prima di aggiungerne uno nuovo
+				spawnObj.Position = new Vector3(i*4,0,j*4);
+				spawnObj.Name = map.MapGrid[(int)road.X, (int)road.Y].CellObjectType.ToString() + " ["+(int)road.X+","+(int)road.Y+"]";
+
+				await SpawnRoadOnDelay(spawnObj);
+			}
+		
+		}
+	}
+
+	// Aggiunge i nodi alla scena con un delay preimpostato
+	private async Task SpawnRoadOnDelay(Node3D roadNode)
+	{
+		AddChild(roadNode);
+		await Task.Delay(delay);
+	}
 
 	// Creates the sea around the map of outSize width
 	private void GenerateOuterMap()

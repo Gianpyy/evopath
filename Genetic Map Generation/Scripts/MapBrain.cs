@@ -204,7 +204,7 @@ public partial class MapBrain : Node
     {
         isAlgorithmRunning = false;
 		GD.Print("Miglior mappa: ");
-		mapVisualizer.GenerateMap(bestMap.Grid);
+		mapVisualizer.GenerateMap(bestMap.Grid, bestMap.Path);
 		bestMap.Grid.PrintMapConsole();
 
 		GD.Print("Soluzione migliore alla generazione "+bestMapGenerationNumber+" con il punteggio: "+bestFitnessScoreAllTime);
@@ -374,6 +374,7 @@ public partial class MapBrain : Node
 		GD.Print("-------------------------------------------------");
 		GD.Print("Salvataggio dei dati in Excel...");
 		DataAnalysis da = new DataAnalysis();
+
 		da.WriteDataInSheet(geneticAlgorithmData, new GeneticAlgorithmConfiguration{
 			populationSize = this.populationSize,
 			generationLimit = this.generationLimit,
