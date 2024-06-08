@@ -19,6 +19,8 @@ public partial class MapBrain : Node
 	[Export] private int mutationRate = 5;
 	// Limite di generazioni
 	[Export] private int generationLimit = 10; 
+	// Il numero di generazioni massimo senza un miglioramento
+	[Export] private int maxGenerationsWithoutImprovements = 5;
 
 	// --- Variabili algoritmo genetico ---
 
@@ -36,6 +38,8 @@ public partial class MapBrain : Node
 	private int bestMapGenerationNumber = 0;
 	// Il numero di generazioni 
 	private int generationNumber = 1;
+	// Il numero di generazioni senza 
+	private int generationsWithoutImprovements = 0;
 
 	// -- Variabili funzione di fitness --
 
@@ -92,6 +96,7 @@ public partial class MapBrain : Node
 		bestMap = null;
 		bestMapGenerationNumber = 0;
 		generationNumber = 1; 
+		generationsWithoutImprovements = 0;
 
 		// Debug
 		geneticAlgorithmData.fitnessArray = new float[generationLimit];
@@ -149,6 +154,11 @@ public partial class MapBrain : Node
 			bestFitnessScoreAllTime = bestFitnessScoreThisGeneration;
 			bestMap = bestMapThisGeneration.DeepClone();
 			bestMapGenerationNumber = generationNumber;
+			generationsWithoutImprovements = 0;
+		}
+		else 
+		{
+			generationsWithoutImprovements++;
 		}
 
 		
@@ -163,9 +173,6 @@ public partial class MapBrain : Node
 
 		// GD.Print("Miglior mappa della generazione: ");
 		// bestMapThisGeneration.Grid.PrintMapConsole();
-
-		
-
 
 		if(!IsOutOfResources())
 		{
@@ -232,28 +239,40 @@ public partial class MapBrain : Node
     /// </summary>
     /// <returns>true: se il budget è finito, false altrimenti</returns>
     private bool IsOutOfResources()
+    {
+        if (CheckForImprovements())
+		{
+			return !CheckForGenerationNumber();
+		}
+
+		return true;
+    }
+
+	// Controllo se non ci sono stati miglioramenti
+	private bool CheckForImprovements()
 	{
-		// Controllo per il numero di generazioni come budget
-		if(generationNumber <= generationLimit)
-			return false;
-		else
-			return true;
-		
+		return generationsWithoutImprovements < maxGenerationsWithoutImprovements;
 	}
-		
-	/// <summary>
-	/// Calcola la fitness per una mappa candidata.
-	/// La funzione di fitness tiene conto della lunghezza del percorso, del numero di ostacoli e del numero di curve 
-	/// Nello specifico:
-	/// <list type="bullet"> 
-	/// <item><description>MASSIMIZZIAMO la lunghezza del percorso</description></item>
-	/// <item><description>MASSIMIZZIAMO il numero di ostacoli</description></item>
-	/// <item><description>MASSIMIZZIAMO il numero di curve</description></item>
-	/// </list>
-	/// </summary>
-	/// <param name="candidateMap">La mappa candidata per cui vogliamo calcolare il valore di fitness</param>
-	/// <returns>Il valore di fitness associato ad una mappa candidata</returns>
-	private float CalculateFitness(CandidateMap candidateMap) 
+
+	// Controllo per il numero di generazioni come budget
+    private bool CheckForGenerationNumber()
+    {
+        return generationNumber < generationLimit;
+    }
+
+    /// <summary>
+    /// Calcola la fitness per una mappa candidata.
+    /// La funzione di fitness tiene conto della lunghezza del percorso, del numero di ostacoli e del numero di curve 
+    /// Nello specifico:
+    /// <list type="bullet"> 
+    /// <item><description>MASSIMIZZIAMO la lunghezza del percorso</description></item>
+    /// <item><description>MASSIMIZZIAMO il numero di ostacoli</description></item>
+    /// <item><description>MASSIMIZZIAMO il numero di curve</description></item>
+    /// </list>
+    /// </summary>
+    /// <param name="candidateMap">La mappa candidata per cui vogliamo calcolare il valore di fitness</param>
+    /// <returns>Il valore di fitness associato ad una mappa candidata</returns>
+    private float CalculateFitness(CandidateMap candidateMap) 
 	{
 		int numberOfObstacles = candidateMap.Obstacles.Where(isObstacle => isObstacle).Count();
 		int numberOfCorners = candidateMap.CornersList.Count;
@@ -394,6 +413,7 @@ public partial class MapBrain : Node
 			mapWidth = this.mapWidth,
 			mapHeight = this.mapHeight,
 			numberOfPieces = this.numberOfKnightPieces,
+			maxGenerationsWithoutImprovements = this.maxGenerationsWithoutImprovements,
 		});
 	}
 

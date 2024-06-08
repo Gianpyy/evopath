@@ -76,7 +76,7 @@ public class CandidateMap
 		}
 
 		
-		GD.Print(obstacles.Count(isObstacle => isObstacle));
+		// GD.Print(obstacles.Count(isObstacle => isObstacle));
 
 		// Debug
 		//cornersList = GetListOfCorners(path);

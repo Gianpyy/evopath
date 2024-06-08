@@ -12,4 +12,5 @@ public struct GeneticAlgorithmConfiguration
 	public int mapWidth;
 	public int mapHeight;
 	public int numberOfPieces;
+	public int maxGenerationsWithoutImprovements;
 }
