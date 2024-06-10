@@ -41,6 +41,13 @@ public partial class MapBrain : Node
 	// Il numero di generazioni senza 
 	private int generationsWithoutImprovements = 0;
 
+	// Il tipo di operatore genetico per la selezione
+	[Export] private Selection selectionMethod = Selection.Truncation;
+	// Il tipo di operatore genetico per il crossover
+	[Export] private Crossover crossoverMethod = Crossover.SinglePoint;
+	// Il tipo di operatore genetico per la mutazione
+	[Export] private Mutation mutationMethod = Mutation.BitFlip;
+
 	// -- Variabili funzione di fitness --
 
 	// Il numero minimo di curve
@@ -169,29 +176,66 @@ public partial class MapBrain : Node
 		geneticAlgorithmData.fitnessArray[generationNumber-1] = bestFitnessScoreThisGeneration;
 
 		generationNumber++;
-		//yield return Timing.WaitForOneFrame;
-
-		// GD.Print("Miglior mappa della generazione: ");
-		// bestMapThisGeneration.Grid.PrintMapConsole();
+		
 
 		if(!IsOutOfResources())
 		{
 			List<CandidateMap> nextGeneration = new List<CandidateMap>();
 		
+			
 			while(nextGeneration.Count < populationSize)
 			{
-				// Selection
-				CandidateMap parent1 = currentGeneration[RouletteWheelSelection()];
-				CandidateMap parent2 = currentGeneration[RouletteWheelSelection()];
+				
+				// SELECTION
+				CandidateMap parent1 = null;
+				CandidateMap parent2 = null;
 
-				// Crossover
-				CandidateMap child1, child2;
+				switch(selectionMethod)
+				{
+					case Selection.RouletteWheel:
 
-				SinglePointCrossover(parent1, parent2, out child1, out child2);
+						parent1 = currentGeneration[RouletteWheelSelection()];
+						parent2 = currentGeneration[RouletteWheelSelection()];
 
-				// Mutation
-				BitflipMutation(child1);
-				BitflipMutation(child2);
+					break;
+
+					case Selection.Truncation:
+
+						parent1 = currentGeneration[0].DeepClone();
+						parent2 = currentGeneration[1].DeepClone();
+						TruncationSelection(ref parent1, ref parent2);
+						
+					break;
+					
+				}
+
+				
+				// CROSSOVER
+				CandidateMap child1 = null;
+				CandidateMap child2 = null;
+
+				switch(crossoverMethod)
+				{
+					case Crossover.SinglePoint:
+
+						SinglePointCrossover(parent1, parent2, out child1, out child2);
+
+					break;
+					
+				}				
+
+				// MUTATION
+
+				switch(mutationMethod)
+				{
+					case Mutation.BitFlip:
+
+						BitflipMutation(child1);
+						BitflipMutation(child2);
+
+					break;
+					
+				}
 
 				nextGeneration.Add(child1);
 				nextGeneration.Add(child2);
@@ -339,6 +383,39 @@ public partial class MapBrain : Node
 		return populationSize - 1;
 	}
 
+	private void TruncationSelection(ref CandidateMap c1, ref CandidateMap c2)
+	{
+		CandidateMap[] candidateMaps = currentGeneration.ToArray();
+
+		float c1Fitness = CalculateFitness(c1);
+		float c2Fitness = CalculateFitness(c2);
+
+		if(c1Fitness < c2Fitness)
+		{
+			c1 = candidateMaps[1].DeepClone();
+			c2 = candidateMaps[0].DeepClone();
+		}
+		
+
+		for (int i = 2; i < candidateMaps.Length; i++)
+		{
+
+            float ciFitness = CalculateFitness(candidateMaps[i]);
+            
+            if (ciFitness > c1Fitness)
+			{
+				c2 = c1.DeepClone();
+				c1 = candidateMaps[i].DeepClone();
+			}
+			else if(ciFitness > c2Fitness)
+			{
+				c2 = candidateMaps[i].DeepClone();
+			}
+		
+		}
+
+	}
+
 	/// <summary>
 	/// Esegue un single point crossover tra due mappe candidate genitori per produrre due mappe candidate figli.
 	/// Viene scelto casualmente un punto di taglio dal genitore1 e vengono incrociati gli array di ostacoli dopo quel punto per generare i figli
@@ -390,12 +467,8 @@ public partial class MapBrain : Node
 
 	}
 
-
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	public void WriteDataToExcel()
 	{
-		RunAlgorithm();
-
 		GD.Print("-------------------------------------------------");
 		GD.Print("Salvataggio dei dati in Excel...");
 		DataAnalysis da = new DataAnalysis();
@@ -415,6 +488,14 @@ public partial class MapBrain : Node
 			numberOfPieces = this.numberOfKnightPieces,
 			maxGenerationsWithoutImprovements = this.maxGenerationsWithoutImprovements,
 		});
+	}
+
+
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
+	{
+		//RunAlgorithm();
+		//WriteDataToExcel();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

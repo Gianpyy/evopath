@@ -306,6 +306,7 @@ public class CandidateMap
 		obstacles[index] = isObstacle;
 	}
 
+	
 	public void RebuildGrid()
 	{
 		grid.CreateMap();

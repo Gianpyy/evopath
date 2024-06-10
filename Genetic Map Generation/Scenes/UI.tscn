@@ -1,16 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://byj6h6e71ljp8"]
+[gd_scene load_steps=5 format=3 uid="uid://byj6h6e71ljp8"]
 
-[ext_resource type="Script" path="res://Scenes/UI.gd" id="1_t0okx"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/UI.gd" id="1_t0okx"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_os2d3"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s1o6g"]
+
+[sub_resource type="GDScript" id="GDScript_nmick"]
 
 [node name="Ui" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_t0okx")
@@ -62,7 +68,33 @@ offset_top = 55.0
 offset_right = 1122.0
 offset_bottom = 535.0
 
+[node name="GenerateMapButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 38.0
+offset_top = 592.0
+offset_right = 157.0
+offset_bottom = 623.0
+text = "Generate map"
+script = SubResource("GDScript_nmick")
+
+[node name="DataToExcelButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 178.0
+offset_top = 592.0
+offset_right = 265.0
+offset_bottom = 623.0
+text = "Excel data"
+
+[node name="TextEdit" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 109.0
+offset_right = 397.0
+offset_bottom = 140.0
+
 [connection signal="button_down" from="CheckButton" to="." method="_on_check_button_button_down"]
 [connection signal="button_up" from="CheckButton" to="." method="_on_check_button_button_up"]
 [connection signal="toggled" from="CheckButton" to="." method="_on_check_button_toggled"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="GenerateMapButton" to="." method="_on_generate_map_button_pressed"]
+[connection signal="pressed" from="DataToExcelButton" to="." method="_on_data_to_excel_button_pressed"]
