@@ -333,7 +333,7 @@ public class CandidateMap
 	// Getters
 	public Map Grid {get => grid;}
 
-    public bool[] Obstacles { get => obstacles;}
+    public bool[] Obstacles { get => obstacles; set => obstacles = value;}
 
 	public int ConsecutiveCornersCount {get => consecutiveCornersCount;}
 	

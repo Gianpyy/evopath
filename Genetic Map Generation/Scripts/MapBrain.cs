@@ -40,9 +40,10 @@ public partial class MapBrain : Node
 	private int generationNumber = 1;
 	// Il numero di generazioni senza 
 	private int generationsWithoutImprovements = 0;
-
+	// La dimensione massima dei blocchi di ostacoli per il BlockSwapCrossover
+	[Export] private int maxBlockSize = 5;
 	// Il tipo di operatore genetico per la selezione
-	[Export] private Selection selectionMethod = Selection.Truncation;
+	[Export] private Selection selectionMethod = Selection.RouletteWheel;
 	// Il tipo di operatore genetico per il crossover
 	[Export] private Crossover crossoverMethod = Crossover.SinglePoint;
 	// Il tipo di operatore genetico per la mutazione
@@ -235,6 +236,26 @@ public partial class MapBrain : Node
 					case Crossover.SinglePoint:
 
 						SinglePointCrossover(parent1, parent2, out child1, out child2);
+
+					break;
+
+					case Crossover.Uniform:
+
+						UniformCrossover(parent1, parent2, out child1);
+						UniformCrossover(parent1, parent2, out child2);
+						
+					break;
+
+					case Crossover.Heuristic:
+
+						HeuristicCrossover(parent1, parent2, out child1);
+						HeuristicCrossover(parent1, parent2, out child2);
+
+					break;
+
+					case Crossover.BlockSwap:
+
+						BlockSwapCrossover(parent1, parent2, out child1, out child2);
 
 					break;
 					
@@ -457,6 +478,100 @@ public partial class MapBrain : Node
 			{
 				child1.PlaceObstacle(i , parent2.IsObstacleAt(i));
 				child2.PlaceObstacle(i, parent1.IsObstacleAt(i));
+			}
+		}
+	}
+
+	/// <summary>
+	/// Esegue un crossover uniforme tra due mappe candidate genitori per generare una nuova mappa candidata figlio.
+	/// Ogni ostacolo nella mappa figlio ha una probabilità del 50% di essere ereditato da uno dei due genitori.
+	/// </summary>
+	/// <param name="parent1">La prima mappa candidata genitore.</param>
+	/// <param name="parent2">La seconda mappa candidata genitore.</param>
+	/// <param name="child">La mappa candidata figlio risultante dal crossover.</param>
+	private void UniformCrossover (CandidateMap parent1, CandidateMap parent2, out CandidateMap child)
+	{
+		Random rand = new Random();
+		
+		child = new CandidateMap(grid.DeepClone(), numberOfKnightPieces);
+		child.CreateCandidateMap(startPosition, exitPosition, true);
+
+		for (int i = 0; i < child.Obstacles.Length; i++)
+		{
+			int randomNumber = rand.Next(0,100);
+
+			if (randomNumber < 50)
+				child.PlaceObstacle(i, parent1.IsObstacleAt(i));
+			else	
+				child.PlaceObstacle(i, parent2.IsObstacleAt(i));
+		}
+	}
+
+	/// <summary>
+	/// Esegue un crossover euristico tra due mappe genitore.
+	/// Il figlio erediterà gli ostacoli del genitore con la fitness maggiore.
+	/// </summary>
+	/// <param name="parent1">La prima mappa candidata genitore.</param>
+	/// <param name="parent2">La seconda mappa candidata genitore.</param>
+	/// <param name="child">La mappa candidata figlio risultante dal crossover.</param>
+	private void HeuristicCrossover(CandidateMap parent1, CandidateMap parent2, out CandidateMap child)
+	{
+		child = new CandidateMap(grid.DeepClone(), numberOfKnightPieces);
+		child.CreateCandidateMap(startPosition, exitPosition, true);
+
+		float fitness1 = CalculateFitness(parent1);
+		float fitness2 = CalculateFitness(parent2);
+
+		if (fitness1 > fitness2)
+		{
+			child.Obstacles = (bool[]) parent1.Obstacles.Clone();
+		}
+		else
+		{
+			child.Obstacles = (bool[]) parent2.Obstacles.Clone();
+		}
+	}
+
+
+	/// <summary>
+	/// Esegue un crossover per scambio di blocchi tra due mappe genitori, generando due figli.
+	/// Ogni figlio eredita blocchi di ostacoli dai genitori basandosi sulla loro fitness.
+	/// </summary>
+	/// <param name="parent1">La prima mappa candidata genitore.</param>
+	/// <param name="parent2">La seconda mappa candidata genitore.</param>
+	/// <param name="child1">Il primo figlio risultante dal crossover.</param>
+	/// <param name="child2">Il secondo figlio risultante dal crossover.</param>
+	private void BlockSwapCrossover(CandidateMap parent1, CandidateMap parent2, out CandidateMap child1, out CandidateMap child2)
+	{
+		int blockCounter = 0;
+		
+		child1 = parent1.DeepClone();
+		child2 = parent2.DeepClone();
+
+		float fitness1 = CalculateFitness(parent1);
+		float fitness2 = CalculateFitness(parent2);
+
+		int p1 = (int) (fitness1 / (fitness1 + fitness2) * 100);
+
+		Random rand = new Random();
+
+		for(int i = 0; i < parent1.Obstacles.Length; i++)
+		{
+			if (parent1.IsObstacleAt(i))
+				blockCounter++;
+			else
+				blockCounter = 0;
+
+			if (blockCounter == maxBlockSize)
+			{
+				if (rand.Next(0, 100) > p1)
+				{
+					for(int j = i; j < i + maxBlockSize && j < parent1.Obstacles.Length; j++)
+					{
+						child1.PlaceObstacle(j, parent2.IsObstacleAt(j));
+						child2.PlaceObstacle(j, parent1.IsObstacleAt(j));
+					}
+				}
 			}
 		}
 	}

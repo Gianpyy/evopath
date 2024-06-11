@@ -10,7 +10,10 @@ public enum Selection
 
 public enum Crossover
 {
-	SinglePoint
+	SinglePoint,
+	Uniform,
+	Heuristic,
+	BlockSwap
 }
 
 public enum Mutation
