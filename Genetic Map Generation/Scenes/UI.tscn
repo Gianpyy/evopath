@@ -1,14 +1,85 @@
-[gd_scene load_steps=5 format=3 uid="uid://byj6h6e71ljp8"]
+[gd_scene load_steps=24 format=3 uid="uid://byj6h6e71ljp8"]
 
 [ext_resource type="Script" path="res://Scripts/UIScripts/UI.gd" id="1_t0okx"]
+[ext_resource type="Texture2D" uid="uid://c31qy3sc330b7" path="res://Icons/ExcelIcon.png" id="2_can7x"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/ParamController.gd" id="2_giuxs"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/Panel.gd" id="3_2dvco"]
+[ext_resource type="Shader" path="res://Icons/Blur.gdshader" id="3_58m1o"]
+[ext_resource type="Texture2D" uid="uid://3isgfqqc0856" path="res://Icons/CloseButtonIcon.png" id="6_0ds7y"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_os2d3"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s1o6g"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lapgu"]
+bg_color = Color(0.0901961, 0.513726, 0.290196, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6wd8a"]
+bg_color = Color(0.0901961, 0.513726, 0.290196, 0.823529)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2jk1b"]
+bg_color = Color(0.960784, 0.545098, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kr0he"]
+bg_color = Color(0.960784, 0.545098, 0, 0.823529)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_76xoo"]
+bg_color = Color(0.960784, 0.545098, 0, 0.827451)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pst2l"]
+
 [sub_resource type="GDScript" id="GDScript_nmick"]
 
-[node name="Ui" type="Control"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_fv8pw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oekuf"]
+bg_color = Color(0.121569, 0.121569, 0.121569, 1)
+border_color = Color(1, 0.917647, 0.882353, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0, 0, 0, 0.85098)
+shadow_size = 10
+shadow_offset = Vector2(-2, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tsrs5"]
+shader = ExtResource("3_58m1o")
+shader_parameter/lod = 0.855
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sjxht"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qgq5t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shlle"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3r37w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v828h"]
+
+[node name="Ui" type="Control" groups=["CustomParams"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,13 +91,16 @@ offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_t0okx")
+metadata/_edit_horizontal_guides_ = [560.0, 583.0, 635.0, 610.0]
+metadata/_edit_vertical_guides_ = [576.0, 1153.0, 1.0, 661.0, 491.0]
 
 [node name="CheckButton" type="CheckButton" parent="."]
+z_index = -2
 layout_mode = 0
-offset_left = 1005.0
-offset_top = 556.0
-offset_right = 1049.0
-offset_bottom = 616.0
+offset_left = 1016.0
+offset_top = 573.0
+offset_right = 1060.0
+offset_bottom = 633.0
 scale = Vector2(1.25, 1.25)
 theme_override_colors/font_outline_color = Color(0.761704, 0.212962, 0.433446, 1)
 theme_override_styles/focus = SubResource("StyleBoxEmpty_os2d3")
@@ -51,50 +125,216 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 text = "3D"
 
-[node name="Button" type="Button" parent="."]
+[node name="ShowDataButton" type="Button" parent="."]
+z_index = -2
 layout_mode = 0
-offset_left = 982.0
+offset_left = 1004.0
 offset_top = 19.0
-offset_right = 1071.0
+offset_right = 1093.0
 offset_bottom = 50.0
+mouse_default_cursor_shape = 2
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_s1o6g")
-text = "Show data"
+text = "DATA"
 
-[node name="ItemList" type="ItemList" parent="."]
+[node name="ItemList" type="ItemList" parent="ShowDataButton"]
 visible = false
 layout_mode = 0
-offset_left = 869.0
-offset_top = 55.0
-offset_right = 1122.0
-offset_bottom = 535.0
+offset_left = -135.0
+offset_top = 36.0
+offset_right = 118.0
+offset_bottom = 516.0
+
+[node name="DataToExcelButton" type="Button" parent="."]
+z_index = -2
+z_as_relative = false
+layout_mode = 0
+offset_left = 27.0
+offset_top = 593.0
+offset_right = 169.0
+offset_bottom = 628.0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.991164, 0.991164, 0.991164, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_lapgu")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6wd8a")
+text = "Export data"
+icon = ExtResource("2_can7x")
+expand_icon = true
+
+[node name="ChangeParamsButton" type="Button" parent="."]
+z_index = -2
+layout_mode = 0
+offset_left = 501.0
+offset_top = 19.0
+offset_right = 662.0
+offset_bottom = 50.0
+mouse_default_cursor_shape = 2
+text = "Parameters
+"
 
 [node name="GenerateMapButton" type="Button" parent="."]
+z_index = -2
 layout_mode = 0
-offset_left = 38.0
-offset_top = 592.0
-offset_right = 157.0
-offset_bottom = 623.0
+offset_left = 490.0
+offset_top = 584.0
+offset_right = 660.0
+offset_bottom = 636.0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_2jk1b")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kr0he")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_76xoo")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pst2l")
 text = "Generate map"
 script = SubResource("GDScript_nmick")
 
-[node name="DataToExcelButton" type="Button" parent="."]
+[node name="Panel" type="Panel" parent="."]
+self_modulate = Color(0.854902, 1, 1, 0.490196)
+material = SubResource("CanvasItemMaterial_fv8pw")
 layout_mode = 0
-offset_left = 178.0
-offset_top = 592.0
-offset_right = 265.0
-offset_bottom = 623.0
-text = "Excel data"
+offset_left = 411.0
+offset_top = 118.0
+offset_right = 750.0
+offset_bottom = 534.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_oekuf")
+script = ExtResource("3_2dvco")
 
-[node name="TextEdit" type="TextEdit" parent="."]
+[node name="ColorRect" type="ColorRect" parent="Panel"]
+z_index = -1
+material = SubResource("ShaderMaterial_tsrs5")
 layout_mode = 0
-offset_left = 258.0
-offset_top = 109.0
-offset_right = 397.0
-offset_bottom = 140.0
+offset_left = -394.0
+offset_top = -119.0
+offset_right = 758.0
+offset_bottom = 529.0
+
+[node name="CornerWeight" type="Control" parent="Panel"]
+anchors_preset = 0
+offset_left = 59.0
+offset_top = 99.0
+offset_right = 99.0
+offset_bottom = 139.0
+script = ExtResource("2_giuxs")
+
+[node name="Label" type="RichTextLabel" parent="Panel/CornerWeight"]
+layout_mode = 0
+offset_top = -26.0
+offset_right = 200.0
+offset_bottom = -1.0
+text = "Corner weights"
+
+[node name="TextEdit" type="TextEdit" parent="Panel/CornerWeight"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = -18.0
+offset_right = 296.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
+text = "1"
+
+[node name="Slider" type="HSlider" parent="Panel/CornerWeight"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 16.0
+min_value = 1.0
+value = 1.0
+
+[node name="ObstacleWeight" type="Control" parent="Panel"]
+anchors_preset = 0
+offset_left = 59.0
+offset_top = 164.0
+offset_right = 99.0
+offset_bottom = 204.0
+script = ExtResource("2_giuxs")
+
+[node name="Label" type="RichTextLabel" parent="Panel/ObstacleWeight"]
+layout_mode = 0
+offset_top = -26.0
+offset_right = 200.0
+offset_bottom = -1.0
+text = "Obstacles weights"
+
+[node name="TextEdit" type="TextEdit" parent="Panel/ObstacleWeight"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = -18.0
+offset_right = 296.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
+text = "1"
+
+[node name="Slider" type="HSlider" parent="Panel/ObstacleWeight"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 16.0
+min_value = 1.0
+value = 1.0
+
+[node name="PathWeight" type="Control" parent="Panel"]
+anchors_preset = 0
+offset_left = 59.0
+offset_top = 228.0
+offset_right = 99.0
+offset_bottom = 268.0
+script = ExtResource("2_giuxs")
+
+[node name="Label" type="RichTextLabel" parent="Panel/PathWeight"]
+layout_mode = 0
+offset_top = -26.0
+offset_right = 200.0
+offset_bottom = -1.0
+text = "Path weights"
+
+[node name="TextEdit" type="TextEdit" parent="Panel/PathWeight"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = -18.0
+offset_right = 296.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
+text = "1"
+
+[node name="Slider" type="HSlider" parent="Panel/PathWeight"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 16.0
+min_value = 1.0
+value = 1.0
+
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 287.0
+offset_top = 22.0
+offset_right = 310.0
+offset_bottom = 47.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_shlle")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_3r37w")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v828h")
+icon = ExtResource("6_0ds7y")
+expand_icon = true
 
 [connection signal="button_down" from="CheckButton" to="." method="_on_check_button_button_down"]
 [connection signal="button_up" from="CheckButton" to="." method="_on_check_button_button_up"]
 [connection signal="toggled" from="CheckButton" to="." method="_on_check_button_toggled"]
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="GenerateMapButton" to="." method="_on_generate_map_button_pressed"]
+[connection signal="pressed" from="ShowDataButton" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="DataToExcelButton" to="." method="_on_data_to_excel_button_pressed"]
+[connection signal="pressed" from="ChangeParamsButton" to="Panel" method="_on_change_params_button_pressed"]
+[connection signal="pressed" from="GenerateMapButton" to="." method="_on_generate_map_button_pressed"]
+[connection signal="pressed" from="GenerateMapButton" to="Panel" method="_on_generate_map_button_pressed"]
+[connection signal="text_changed" from="Panel/CornerWeight/TextEdit" to="Panel/CornerWeight" method="_on_text_edit_text_changed"]
+[connection signal="text_set" from="Panel/CornerWeight/TextEdit" to="Panel/CornerWeight" method="_on_text_edit_text_set"]
+[connection signal="value_changed" from="Panel/CornerWeight/Slider" to="Panel/CornerWeight" method="_on_slider_value_changed"]
+[connection signal="text_changed" from="Panel/ObstacleWeight/TextEdit" to="Panel/ObstacleWeight" method="_on_text_edit_text_changed"]
+[connection signal="text_set" from="Panel/ObstacleWeight/TextEdit" to="Panel/ObstacleWeight" method="_on_text_edit_text_set"]
+[connection signal="value_changed" from="Panel/ObstacleWeight/Slider" to="Panel/ObstacleWeight" method="_on_slider_value_changed"]
+[connection signal="text_changed" from="Panel/PathWeight/TextEdit" to="Panel/PathWeight" method="_on_text_edit_text_changed"]
+[connection signal="text_set" from="Panel/PathWeight/TextEdit" to="Panel/PathWeight" method="_on_text_edit_text_set"]
+[connection signal="value_changed" from="Panel/PathWeight/Slider" to="Panel/PathWeight" method="_on_slider_value_changed"]
+[connection signal="pressed" from="Panel/CloseButton" to="Panel" method="_on_close_button_pressed"]

@@ -13,7 +13,7 @@ func _ready():
 			var propertyName = str(e["name"])
 			var propertyValueStr = str(mapVisualizerNode.get(propertyName))
 			
-			$ItemList.add_item(propertyName+" "+propertyValueStr,null,false)
+			$ShowDataButton/ItemList.add_item(propertyName+" "+propertyValueStr,null,false)
 			
 	
 	#$TextEdit.text = str($"..".mutationMethod.keys());
@@ -29,7 +29,7 @@ func _on_check_button_toggled(toggled_on):
 
 func _on_button_pressed():
 	
-	$ItemList.visible = !$ItemList.visible
+	$ShowDataButton/ItemList.visible = !$ShowDataButton/ItemList.visible
 
 
 func _on_generate_map_button_pressed():

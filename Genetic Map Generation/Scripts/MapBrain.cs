@@ -131,9 +131,25 @@ public partial class MapBrain : Node
 		GeneticAlgorithm();
 	}
 
+	// Ottiene i parametri impostati dall'UI con gli slider per impostarli nell'algoritmo genetico
+	private void GetParametersFromUI()
+	{
+
+		Slider obstacleWeightsSlider = GetNode<Slider>("Ui/Panel/ObstacleWeight/Slider");
+		Slider cornerWeightSlider = GetNode<Slider>("Ui/Panel/CornerWeight/Slider");
+		Slider pathWeightSlider = GetNode<Slider>("Ui/Panel/PathWeight/Slider");
+		
+		fitnessObstacleWeight = (float)obstacleWeightsSlider.Value;
+		fitnessCornerWeight = (float)cornerWeightSlider.Value;
+		fitnessPathWeight = (float)pathWeightSlider.Value;
+	}
+
 	// Algoritmo genetico per trovare la miglior generazione
 	private void GeneticAlgorithm()
 	{
+
+		GetParametersFromUI();
+
 		totalFitnessThisGeneration = 0;
 		float bestFitnessScoreThisGeneration = 0;
 		CandidateMap bestMapThisGeneration = null;
@@ -499,6 +515,10 @@ public partial class MapBrain : Node
 	{
 		//RunAlgorithm();
 		//WriteDataToExcel();
+		grid = new Map(mapWidth, mapHeight);
+
+		CandidateMap emptyCandidateMap = new CandidateMap(grid,0);
+		mapVisualizer.GenerateMap(emptyCandidateMap.grid,emptyCandidateMap.Path);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

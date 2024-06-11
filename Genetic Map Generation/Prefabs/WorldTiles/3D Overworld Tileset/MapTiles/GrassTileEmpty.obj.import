@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://w7v2soct5ecv"
+path="res://.godot/imported/GrassTileEmpty.obj-9cf0c1ea8431389e870b9e7b50713f9f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/GrassTileEmpty.obj-9cf0c1ea8431389e870b9e7b50713f9f.mesh"]
+
+source_file="res://Prefabs/WorldTiles/3D Overworld Tileset/MapTiles/GrassTileEmpty.obj"
+dest_files=["res://.godot/imported/GrassTileEmpty.obj-9cf0c1ea8431389e870b9e7b50713f9f.mesh", "res://.godot/imported/GrassTileEmpty.obj-9cf0c1ea8431389e870b9e7b50713f9f.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false
