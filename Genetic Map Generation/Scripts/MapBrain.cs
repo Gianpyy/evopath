@@ -487,6 +487,9 @@ public partial class MapBrain : Node
 			mapHeight = this.mapHeight,
 			numberOfPieces = this.numberOfKnightPieces,
 			maxGenerationsWithoutImprovements = this.maxGenerationsWithoutImprovements,
+			selectionMethod = this.selectionMethod,
+			crossoverMethod = this.crossoverMethod,
+			mutationMethod = this.mutationMethod,
 		});
 	}
 

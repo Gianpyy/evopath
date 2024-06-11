@@ -22,8 +22,8 @@ public class DataAnalysis
     private const int DataStartingRow = 6;
 
     // Larghezze celle
-    private const double GeneticAlgorithmConfigurationInfoColWidth = 20.50;
-    private const double GeneticAlgorithmConfigurationDataColWidth = 9.40;
+    private const double GeneticAlgorithmConfigurationInfoColWidth = 34.00;
+    private const double GeneticAlgorithmConfigurationDataColWidth = 16.00;
     private const double GenerationNumberColWidth = 20.30;
     private const double FitnessArrayColWidth = 21.00;
     
@@ -52,15 +52,16 @@ public class DataAnalysis
                 InsertDataInExsistingSheet(geneticAlgorithmData, geneticAlgorithmConfiguration, worksheet);
                 package.Save();
 
-                string successString = "[color=green]Dati inseriti con successo in " + file.Name + ". [/color]";
+                string successString = "[color=green]Dati inseriti con successo in Foglio" + (worksheetIndex + 1) + ". [/color]";
                 GD.PrintRich(successString);
             }
             else
             {
+                worksheetIndex = package.Workbook.Worksheets.Count;
                 InsertDataInNewSheet(geneticAlgorithmData, geneticAlgorithmConfiguration, package);
                 package.Save();
 
-                string successString = "[color=green]Dati inseriti con successo in " + file.Name + ". [/color]";
+                string successString = "[color=green]Dati inseriti con successo in Foglio" + (worksheetIndex + 1) + ". [/color]";
                 GD.PrintRich(successString);
             }
         }
@@ -163,14 +164,20 @@ public class DataAnalysis
             sheetFound = true;
 
             // Controllo sul singolo foglio
-            for (int sheetIndex = DataStartingRow, arrayIndex = 0; sheetIndex < DataStartingRow + fields.Length; sheetIndex++, arrayIndex++)
+            for (int sheetIndex = DataStartingRow; sheetIndex < DataStartingRow + fields.Length; sheetIndex++)
             {
                 string parameterToCheck = (string) worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + sheetIndex].Value;
+                if (parameterToCheck == null)
+                {
+                    sheetFound = false;
+                    break;
+                }
 
-                double parameterValue = (double) worksheet.Cells[GeneticAlgorithmConfigurationDataCol + sheetIndex].Value;
-                float configurationValue =  Convert.ToSingle(fieldsDictionary[parameterToCheck]);   
+                object cellValue = worksheet.Cells[GeneticAlgorithmConfigurationDataCol + sheetIndex].Value;
+                string parameterValue = cellValue != null ? cellValue.ToString() : string.Empty; 
+                string configurationValue = fieldsDictionary[parameterToCheck].ToString();
 
-                if (parameterValue != configurationValue)
+                if (parameterValue.CompareTo(configurationValue) != 0)
                 {
                     sheetFound = false;
                     break;
@@ -278,7 +285,13 @@ public class DataAnalysis
 
         // Formattazione bordo
         ExcelRange range = worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1) + ":" + GeneticAlgorithmConfigurationDataCol + (DataStartingRow - 1)];
+
         range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        range = worksheet.Cells[GeneticAlgorithmConfigurationInfoCol + (DataStartingRow - 1) + ":" + GeneticAlgorithmConfigurationDataCol + (DataStartingRow + fields.Length - 1)];
+        range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+        range = worksheet.Cells[GeneticAlgorithmConfigurationDataCol + DataStartingRow + ":" + GeneticAlgorithmConfigurationDataCol + (DataStartingRow + fields.Length - 1)];
+        range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
 
         // -- Formattazione dati --
 

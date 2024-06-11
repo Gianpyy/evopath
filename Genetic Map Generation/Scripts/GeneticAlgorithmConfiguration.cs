@@ -13,4 +13,7 @@ public struct GeneticAlgorithmConfiguration
 	public int mapHeight;
 	public int numberOfPieces;
 	public int maxGenerationsWithoutImprovements;
+	public Selection selectionMethod;
+	public Crossover crossoverMethod;
+	public Mutation mutationMethod;
 }
