@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://byj6h6e71ljp8"]
+[gd_scene load_steps=26 format=3 uid="uid://byj6h6e71ljp8"]
 
 [ext_resource type="Script" path="res://Scripts/UIScripts/UI.gd" id="1_t0okx"]
 [ext_resource type="Texture2D" uid="uid://c31qy3sc330b7" path="res://Icons/ExcelIcon.png" id="2_can7x"]
@@ -25,6 +25,13 @@ corner_radius_top_right = 7
 corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ntyaw"]
+bg_color = Color(0.298039, 0.298039, 0.298039, 0.772549)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2jk1b"]
 bg_color = Color(0.960784, 0.545098, 0, 1)
 corner_radius_top_left = 10
@@ -41,6 +48,13 @@ corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_76xoo"]
 bg_color = Color(0.960784, 0.545098, 0, 0.827451)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8frwi"]
+bg_color = Color(0.298039, 0.298039, 0.298039, 0.772549)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -91,7 +105,7 @@ offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_t0okx")
-metadata/_edit_horizontal_guides_ = [560.0, 583.0, 635.0, 610.0]
+metadata/_edit_horizontal_guides_ = [560.0, 583.0, 635.0, 610.0, 35.0]
 metadata/_edit_vertical_guides_ = [576.0, 1153.0, 1.0, 661.0, 491.0]
 
 [node name="CheckButton" type="CheckButton" parent="."]
@@ -128,21 +142,131 @@ text = "3D"
 [node name="ShowDataButton" type="Button" parent="."]
 z_index = -2
 layout_mode = 0
-offset_left = 1004.0
+offset_left = 73.0
 offset_top = 19.0
-offset_right = 1093.0
+offset_right = 162.0
 offset_bottom = 50.0
 mouse_default_cursor_shape = 2
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_s1o6g")
 text = "DATA"
 
-[node name="ItemList" type="ItemList" parent="ShowDataButton"]
+[node name="Panel" type="Panel" parent="ShowDataButton"]
 visible = false
 layout_mode = 0
-offset_left = -135.0
-offset_top = 36.0
-offset_right = 118.0
-offset_bottom = 516.0
+offset_left = -63.0
+offset_top = 41.0
+offset_right = 145.0
+offset_bottom = 406.0
+
+[node name="Label1" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 33.0
+offset_right = 193.0
+offset_bottom = 73.0
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[center]Soluzione migliore alla generazione"
+
+[node name="Label2" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 72.0
+offset_right = 188.0
+offset_bottom = 106.0
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "[center]0
+[\\center]"
+scroll_active = false
+tab_size = 1
+
+[node name="Label3" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 106.0
+offset_right = 138.0
+offset_bottom = 126.0
+theme_override_font_sizes/normal_font_size = 13
+text = "con punteggio"
+
+[node name="Label4" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 138.0
+offset_top = 103.0
+offset_right = 216.0
+offset_bottom = 127.0
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+text = "0"
+scroll_active = false
+tab_size = 1
+
+[node name="Label5" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 157.0
+offset_right = 193.0
+offset_bottom = 177.0
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[center]Lunghezza del percorso"
+
+[node name="Label6" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 75.0
+offset_top = 177.0
+offset_right = 130.0
+offset_bottom = 201.0
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[center]0"
+scroll_active = false
+tab_size = 1
+
+[node name="Label7" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 222.0
+offset_right = 194.0
+offset_bottom = 242.0
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[center]Numero di curve"
+
+[node name="Label8" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 242.0
+offset_right = 131.0
+offset_bottom = 266.0
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[center]0"
+scroll_active = false
+tab_size = 1
+
+[node name="Label9" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 289.0
+offset_right = 193.0
+offset_bottom = 309.0
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[center]Numero di ostacoli"
+
+[node name="Label10" type="RichTextLabel" parent="ShowDataButton/Panel"]
+layout_mode = 0
+offset_left = 75.0
+offset_top = 309.0
+offset_right = 130.0
+offset_bottom = 333.0
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[center]0"
+scroll_active = false
+tab_size = 1
 
 [node name="DataToExcelButton" type="Button" parent="."]
 z_index = -2
@@ -156,6 +280,7 @@ mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.991164, 0.991164, 0.991164, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_lapgu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_6wd8a")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_ntyaw")
 text = "Export data"
 icon = ExtResource("2_can7x")
 expand_icon = true
@@ -184,11 +309,13 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_2jk1b")
 theme_override_styles/hover = SubResource("StyleBoxFlat_kr0he")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_76xoo")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_8frwi")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_pst2l")
 text = "Generate map"
 script = SubResource("GDScript_nmick")
 
 [node name="Panel" type="Panel" parent="."]
+visible = false
 self_modulate = Color(0.854902, 1, 1, 0.490196)
 material = SubResource("CanvasItemMaterial_fv8pw")
 layout_mode = 0

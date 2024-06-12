@@ -81,6 +81,7 @@ public partial class MapBrain : Node
     /// </summary>
     public void RunAlgorithm()
 	{
+		
 		ResetAlgorithm();
 
 		grid = new Map(mapWidth, mapHeight);
@@ -297,6 +298,22 @@ public partial class MapBrain : Node
 		GD.Print("Miglior mappa: ");
 		mapVisualizer.GenerateMap(bestMap.Grid, bestMap.Path);
 		bestMap.Grid.PrintMapConsole();
+
+		Panel dataList = GetNode<Panel>("/root/MapGenerator/Ui/ShowDataButton/Panel");
+		RichTextLabel childNode = (RichTextLabel)dataList.GetChild(1);
+        childNode.Text = "[center]"+bestMapGenerationNumber.ToString();
+		childNode = (RichTextLabel)dataList.GetChild(3);
+        childNode.Text = bestFitnessScoreAllTime.ToString("0.00");
+
+		childNode = (RichTextLabel)dataList.GetChild(5);
+        childNode.Text = "[center]"+bestMap.Path.Count.ToString();
+
+		childNode = (RichTextLabel)dataList.GetChild(7);
+        childNode.Text = "[center]"+bestMap.CornersList.Count.ToString();
+
+		childNode = (RichTextLabel)dataList.GetChild(9);
+        childNode.Text = "[center]"+bestMap.Obstacles.Count(isObstacle => isObstacle).ToString();
+    
 
 		GD.Print("Soluzione migliore alla generazione "+bestMapGenerationNumber+" con il punteggio: "+bestFitnessScoreAllTime);
 		GD.Print("Lunghezza del percorso: "+bestMap.Path.Count);
@@ -628,12 +645,12 @@ public partial class MapBrain : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		//RunAlgorithm();
+		RunAlgorithm();
 		//WriteDataToExcel();
-		grid = new Map(mapWidth, mapHeight);
+		//grid = new Map(mapWidth, mapHeight);
 
-		CandidateMap emptyCandidateMap = new CandidateMap(grid,0);
-		mapVisualizer.GenerateMap(emptyCandidateMap.grid,emptyCandidateMap.Path);
+		//CandidateMap emptyCandidateMap = new CandidateMap(grid,0);
+		//mapVisualizer.GenerateMap(emptyCandidateMap.grid,emptyCandidateMap.Path);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

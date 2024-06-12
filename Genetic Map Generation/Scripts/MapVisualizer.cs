@@ -18,21 +18,34 @@ public partial class MapVisualizer : Node3D
 	private int mapSize;
 	[Export]
 	private int delay = 40;
+	private bool isGenerating;
 
-	private List<Node3D> emptyRoadList;
-
-	public void ClearMapVisual()
+	private Button generateMapButton,exportDataButton;
+	
+	
+	public override void _Ready()
 	{
-		foreach(Node node in GetChildren())
+		generateMapButton = GetNode<Button>("/root/MapGenerator/Ui/GenerateMapButton");
+		exportDataButton = GetNode<Button>("/root/MapGenerator/Ui/DataToExcelButton");
+	}
+
+	public override void _Process(double delta)
+	{
+		if(!isGenerating)
 		{
-			RemoveChild(node);
+			generateMapButton.Disabled = false;
+			exportDataButton.Disabled = false;
 		}
+		
 	}
 
     public void GenerateMap(Map map, List<Vector2> path)
     {
 		ClearMapVisual();
- 		emptyRoadList = new List<Node3D>();
+
+		isGenerating = true;
+		generateMapButton.Disabled = true;
+		exportDataButton.Disabled = true;
 
         for (int i = 0; i < map.Width; i++)
         {
@@ -49,7 +62,6 @@ public partial class MapVisualizer : Node3D
 
 					case CellObjectType.Road:
 						spawnObj = (Node3D)grassEmptyObj.Instantiate();
-						//emptyRoadList.Add(spawnObj);
 					break;
 
 					case CellObjectType.Start:
@@ -98,10 +110,20 @@ public partial class MapVisualizer : Node3D
 
 		// Creazione strada con delay
 		GenerateRoadOnDelay(map, path);
+	
+		
 		
     }
 
 	
+	public void ClearMapVisual()
+	{
+		foreach(Node node in GetChildren())
+		{
+			RemoveChild(node);
+		}
+	}
+
 
 	private async void GenerateRoadOnDelay(Map map, List<Vector2> roadList)
 	{
@@ -190,7 +212,7 @@ public partial class MapVisualizer : Node3D
 				}
 				
 				
-				spawnObj.Position = new Vector3(i*4,-0.005f,j*4);
+				spawnObj.Position = new Vector3(i*4,-0.0009f,j*4);
 				spawnObj.Name = map.MapGrid[(int)road.X, (int)road.Y].CellObjectType.ToString() + " ["+(int)road.X+","+(int)road.Y+"]";
 
 				await SpawnRoadOnDelay(spawnObj);
@@ -200,11 +222,9 @@ public partial class MapVisualizer : Node3D
 			
 		
 		}
-		
-		foreach(Node3D emptyRoad in emptyRoadList)
-		{
-			RemoveChild(emptyRoad);
-		}
+	
+
+		isGenerating = false;
 	}
 
 	// Aggiunge i nodi alla scena con un delay preimpostato
@@ -289,4 +309,6 @@ public partial class MapVisualizer : Node3D
 			AddChild(spawnObj);
 		}
 	}
+
+	
 }
