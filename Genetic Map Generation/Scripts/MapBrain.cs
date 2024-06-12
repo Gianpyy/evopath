@@ -272,6 +272,20 @@ public partial class MapBrain : Node
 						BitflipMutation(child2);
 
 					break;
+
+					case Mutation.Block:
+
+						BlockMutation(child1);
+						BlockMutation(child2);
+
+					break;
+
+					case Mutation.SimulatedAnnealing:
+
+						SimulatedAnnealingMutation(child1);
+						SimulatedAnnealingMutation(child2);
+
+					break;
 					
 				}
 
@@ -614,6 +628,97 @@ public partial class MapBrain : Node
 		}
 
 	}
+
+	/// <summary>
+	/// Muta gli ostacoli nella mappa del candidato dividendo il numero di ostacoli consecutivi per 2 (possibile modifica)
+	/// e posizionando casualmente ostacoli all'interno di quel range
+	/// </summary>
+	/// <param name="candidateMap">La mappa candidata contenente gli ostacoli da mutare</param>
+	private void BlockMutation(CandidateMap candidateMap)
+	{
+		Random rand = new Random();
+
+		int blockCounter = 0;
+
+		for(int i = 0; i < candidateMap.Obstacles.Length; i++)
+		{
+			if(candidateMap.IsObstacleAt(i))
+			{
+				blockCounter++;
+			}
+			else
+			{
+				
+				int nMutations = blockCounter/2;
+
+				List<int> selectedIndices = new List<int>();
+
+				
+				int index;
+
+				for(int j = 0; j < nMutations; j++)
+				{
+					do
+					{
+						index = rand.Next(i-blockCounter+1, i);
+					} while (selectedIndices.Contains(index));
+
+					selectedIndices.Add(index);
+				}
+				
+				foreach(int selectedIndex in selectedIndices)
+				{
+					candidateMap.PlaceObstacle(selectedIndex, !candidateMap.IsObstacleAt(selectedIndex));
+				}
+				
+				blockCounter = 0;
+				
+			}
+		}
+	}
+
+	/// <summary>
+	/// Applica il simulated annealing per mutare gli ostacoli nella mappa candidata
+	/// La probabilità di mutazione diminuisce nel tempo di un valore alpha (possibile modifica)
+	/// </summary>
+	/// <param name="candidateMap">La mappa del candidato contenente gli ostacoli da mutare.</param>
+	private void SimulatedAnnealingMutation(CandidateMap candidateMap)
+	{
+		Random rand = new Random();
+		float initialTemperature = 100;
+        float finalTemperature = 0.1f;
+        float alpha = 0.99f;
+
+
+        double currentTemperature = initialTemperature;
+
+		int i = 0;
+		bool reverse = false;
+
+        while (currentTemperature > finalTemperature)
+        {
+			
+			if(rand.Next(0, 100) < currentTemperature)
+			{
+				candidateMap.PlaceObstacle(i, !candidateMap.IsObstacleAt(i));			
+			}
+
+			if(reverse)
+				i--;
+			
+			else
+				i++;
+
+
+			if(i == candidateMap.Obstacles.Length-1)
+				reverse = true;
+			else if(i == 0)
+				reverse = false;
+			
+
+            currentTemperature *= alpha;
+        }
+    }
 
 	public void WriteDataToExcel()
 	{

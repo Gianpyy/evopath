@@ -169,10 +169,11 @@ item/6/preview = SubResource("ImageTexture_4iatt")
 script = ExtResource("1_ayuso")
 populationSize = 20
 generationLimit = 30
+mutationMethod = 2
 fitnessCornerWeight = 5.0
 fitnessObstacleWeight = 2.0
 fitnessPathWeight = 3.0
-numberOfKnightPieces = 2
+numberOfKnightPieces = 8
 mapVisualizer = NodePath("MapVisualizer")
 
 [node name="Ui" parent="." instance=ExtResource("2_s6oen")]
