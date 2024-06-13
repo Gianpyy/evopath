@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -26,6 +27,7 @@ public class DataAnalysis
     private const double GeneticAlgorithmConfigurationDataColWidth = 16.00;
     private const double GenerationNumberColWidth = 20.30;
     private const double FitnessArrayColWidth = 21.00;
+    private const double AdditionalDataColWidth = 13.50;
     
 
     /// <summary>
@@ -81,10 +83,24 @@ public class DataAnalysis
     private void InsertDataInExsistingSheet(GeneticAlgorithmData geneticAlgorithmData, GeneticAlgorithmConfiguration geneticAlgorithmConfiguration ,ExcelWorksheet worksheet)
     {
         // Cerco la colonna in cui inserire i dati
+        List<TimeSpan> elapsedTimes = new List<TimeSpan>();
+
         int columnToInsertData = GetExcelColumnNumber(FitnessArrayStartingCol);
         while (worksheet.Cells[DataStartingRow, columnToInsertData].Value != null)
         {
+            // Nel frattempo mi salvo i valori del tempo di esecuzione per ogni colonna che trovo
+            string cellValue = worksheet.Cells[41, columnToInsertData].Text;
+            if (TimeSpan.TryParseExact(cellValue, @"hh\:mm\:ss\:fffff", CultureInfo.InvariantCulture, out TimeSpan timeSpan))
+            {
+                elapsedTimes.Add(timeSpan);
+            }
+            else
+            {
+                GD.Print($"Errore di conversione per il valore: {cellValue}");
+            }
+
             columnToInsertData++;
+
         }
         
         // Inserimento dati 
@@ -105,16 +121,47 @@ public class DataAnalysis
                 break;
             }
         }
+        int generationCount = i;
         for ( ; i < geneticAlgorithmData.fitnessArray.Length; i++, offset++)
         {
             worksheet.Cells[offset, columnToInsertData].Value = "";
         }
         offset = 0;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, columnToInsertData].Value = generationCount;
         worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, columnToInsertData].Value = geneticAlgorithmData.bestMapFitness;
         worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, columnToInsertData].Value = geneticAlgorithmData.pathLenght;
         worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, columnToInsertData].Value = geneticAlgorithmData.numberOfCorners;
         worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, columnToInsertData].Value = geneticAlgorithmData.numberOfObstacles;
         worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, columnToInsertData].Value = geneticAlgorithmData.elapsedTime.ToString(@"hh\:mm\:ss\:fffff");
+
+        // Inserimento media e valore più alto
+        elapsedTimes.Add(geneticAlgorithmData.elapsedTime);
+        double averageTicks = elapsedTimes.Average(time => time.Ticks);
+        double maxTicks = elapsedTimes.Max(time => time.Ticks);
+        TimeSpan averageTime = TimeSpan.FromTicks((long) averageTicks);
+        TimeSpan maxTime = TimeSpan.FromTicks((long) maxTicks);
+
+
+        int AdditionalDataColumnIndex = GetExcelColumnNumber(GenerationNumberCol) - 2;
+        int AdditionalDataRowIndex = DataStartingRow + geneticAlgorithmConfiguration.generationLimit - 1;
+        string columnToInsertDataLetter = GetExcelColumnName(columnToInsertData);
+        
+        offset = 0;
+        worksheet.Cells[AdditionalDataRowIndex, AdditionalDataColumnIndex].Value = "Media";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex].Formula = "AVERAGE("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex].Formula = "AVERAGE("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex].Formula = "AVERAGE("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex].Formula = "AVERAGE("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex].Formula = "AVERAGE("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex].Value = averageTime.ToString(@"hh\:mm\:ss\:fffff");
+
+        offset = 0;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex + 1].Formula = "MAX("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex + 1].Formula = "MAX("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex + 1].Formula = "MAX("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex + 1].Formula = "MAX("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex + 1].Formula = "MAX("+FitnessArrayStartingCol+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)+":"+columnToInsertDataLetter+(DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)+")";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex + 1].Value = maxTime.ToString(@"hh\:mm\:ss\:fffff");
 
 
         // -- Formattazione stile -- 
@@ -229,6 +276,7 @@ public class DataAnalysis
         offset = DataStartingRow + geneticAlgorithmData.fitnessArray.Length;
         worksheet.Cells[GenerationNumberCol + (DataStartingRow - 1)].Value = "Generazione";
         worksheet.Cells[FitnessArrayStartingCol + (DataStartingRow - 1)].Value = "Fitness Miglior Individuo";
+        worksheet.Cells[GenerationNumberCol + offset++].Value = "Generazioni usate";
         worksheet.Cells[GenerationNumberCol + offset++].Value = "Fitness miglior mappa";
         worksheet.Cells[GenerationNumberCol + offset++].Value = "Lunghezza percorso";
         worksheet.Cells[GenerationNumberCol + offset++].Value = "Numero curve";
@@ -251,17 +299,43 @@ public class DataAnalysis
                 break;
             }
         }
+        int generationCount = i;
         for ( ; i < geneticAlgorithmData.fitnessArray.Length; i++, offset++)
         {
             worksheet.Cells[GenerationNumberCol + offset].Value = i + 1;
                 worksheet.Cells[FitnessArrayStartingCol + offset].Value = "";
         }
         offset = 0;
+        worksheet.Cells[FitnessArrayStartingCol + (DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)].Value = generationCount;
         worksheet.Cells[FitnessArrayStartingCol + (DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)].Value = geneticAlgorithmData.bestMapFitness;
         worksheet.Cells[FitnessArrayStartingCol + (DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)].Value = geneticAlgorithmData.pathLenght;
         worksheet.Cells[FitnessArrayStartingCol + (DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)].Value = geneticAlgorithmData.numberOfCorners;
         worksheet.Cells[FitnessArrayStartingCol + (DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++)].Value = geneticAlgorithmData.numberOfObstacles;
         worksheet.Cells[FitnessArrayStartingCol + (DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset)].Value = geneticAlgorithmData.elapsedTime.ToString(@"hh\:mm\:ss\:fffff");
+
+        // Inserimento media e valore più alto
+        int AdditionalDataColumnIndex = GetExcelColumnNumber(GenerationNumberCol) - 2;
+        int AdditionalDataRowIndex = DataStartingRow + geneticAlgorithmConfiguration.generationLimit - 1;
+        
+        offset = 0;
+        worksheet.Cells[AdditionalDataRowIndex, AdditionalDataColumnIndex].Value = "Media";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex].Value = generationCount;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex].Value = geneticAlgorithmData.bestMapFitness;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex].Value = geneticAlgorithmData.pathLenght;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex].Value = geneticAlgorithmData.numberOfCorners;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex].Value = geneticAlgorithmData.numberOfObstacles;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex].Value = geneticAlgorithmData.elapsedTime.ToString(@"hh\:mm\:ss\:fffff");
+
+        offset = 0;
+        worksheet.Cells[AdditionalDataRowIndex, AdditionalDataColumnIndex + 1].Value = "Highest";
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex + 1].Value = generationCount;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex + 1].Value = geneticAlgorithmData.bestMapFitness;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex + 1].Value = geneticAlgorithmData.pathLenght;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex + 1].Value = geneticAlgorithmData.numberOfCorners;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset++, AdditionalDataColumnIndex + 1].Value = geneticAlgorithmData.numberOfObstacles;
+        worksheet.Cells[DataStartingRow + geneticAlgorithmConfiguration.generationLimit + offset, AdditionalDataColumnIndex + 1].Value = geneticAlgorithmData.elapsedTime.ToString(@"hh\:mm\:ss\:fffff");
+
+
 
         // ---- Formattazione stile ---- 
 
@@ -307,6 +381,21 @@ public class DataAnalysis
         range.Style.Font.Bold = true;
         range.Style.Fill.PatternType = ExcelFillStyle.Solid;
         range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+
+        // Formattazione media e valore più alto
+        worksheet.Column(AdditionalDataColumnIndex).Width = AdditionalDataColWidth;
+        worksheet.Column(AdditionalDataColumnIndex + 1).Width = AdditionalDataColWidth;
+
+        range = worksheet.Cells[AdditionalDataRowIndex, AdditionalDataColumnIndex, AdditionalDataRowIndex + 6, AdditionalDataColumnIndex + 1]; //TODO: no hardcoded
+        range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        range.Style.Font.Bold = true;
+        range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.GreenYellow);
+
+        range = worksheet.Cells[AdditionalDataRowIndex, AdditionalDataColumnIndex + 1, AdditionalDataRowIndex + 6, AdditionalDataColumnIndex + 1]; //TODO: no hardcoded
+        range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
     }
 
 
@@ -328,6 +417,25 @@ public class DataAnalysis
         }
 
         return columnNumber;
+    }
+
+    /// <summary>
+	/// Converte un indice numerico di excel in un indice letterale.
+	/// </summary>
+    /// <param name="columnName">L'indice in formato numerico da convertire</param>
+    /// <returns>L'indice in letterale intero</returns>
+    private string GetExcelColumnName(int columnNumber)
+    {
+        string columnName = "";
+
+        while (columnNumber > 0)
+        {
+            int modulo = (columnNumber - 1) % 26;
+            columnName = Convert.ToChar('A' + modulo) + columnName;
+            columnNumber = (columnNumber - modulo) / 26;
+        } 
+
+        return columnName;
     }
         
 }
