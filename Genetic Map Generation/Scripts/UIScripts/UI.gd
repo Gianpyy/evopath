@@ -2,18 +2,18 @@ extends Control
 
 
 
-func _ready():
+#func _ready():
 	
 	
-	var mapVisualizerNode = $".."
-	var propertyList = mapVisualizerNode.get_property_list()
-	for e in propertyList:
-		if e["usage"] & PROPERTY_USAGE_SCRIPT_VARIABLE:
+	#var mapVisualizerNode = $".."
+	#var propertyList = mapVisualizerNode.get_property_list()
+	#for e in propertyList:
+	#	if e["usage"] & PROPERTY_USAGE_SCRIPT_VARIABLE:
 			
-			var propertyName = str(e["name"])
-			var propertyValueStr = str(mapVisualizerNode.get(propertyName))
+	#		var propertyName = str(e["name"])
+	#		var propertyValueStr = str(mapVisualizerNode.get(propertyName))
 			
-			$ShowDataButton/ItemList.add_item(propertyName+" "+propertyValueStr,null,false)
+	#		$ShowDataButton/ItemList.add_item(propertyName+" "+propertyValueStr,null,false)
 			
 	
 	#$TextEdit.text = str($"..".mutationMethod.keys());
@@ -29,7 +29,7 @@ func _on_check_button_toggled(toggled_on):
 
 func _on_button_pressed():
 	
-	$ShowDataButton/ItemList.visible = !$ShowDataButton/ItemList.visible
+	$ShowDataButton/Panel.visible = !$ShowDataButton/Panel.visible
 
 
 func _on_generate_map_button_pressed():

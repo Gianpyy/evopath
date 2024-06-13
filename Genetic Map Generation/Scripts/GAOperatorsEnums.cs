@@ -18,6 +18,8 @@ public enum Crossover
 
 public enum Mutation
 {
-	BitFlip
+	BitFlip,
+	Block,
+	SimulatedAnnealing
 }
 

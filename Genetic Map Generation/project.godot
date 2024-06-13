@@ -25,3 +25,7 @@ folder_colors={
 "res://Scenes/": "pink",
 "res://Scripts/": "blue"
 }
+
+[rendering]
+
+2d/snap/snap_2d_vertices_to_pixel=true
