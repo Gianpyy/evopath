@@ -4,8 +4,8 @@ using System;
 public enum Direction
 {
 	None,
-	Right,
 	Left,
+	Right,
 	Up,
 	Down,
 }

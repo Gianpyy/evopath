@@ -1,9 +1,12 @@
 extends Control
 
-
-
+func change_slider_value(value):
+	get_child(2).value = value
+	
 func _on_slider_value_changed(value):
-	$TextEdit.text = str(value)
+	get_child(1).text = str(value)
+
+
 
 
 #func _on_text_edit_text_changed():

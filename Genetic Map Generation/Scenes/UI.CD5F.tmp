@@ -1,14 +1,12 @@
-[gd_scene load_steps=36 format=3 uid="uid://byj6h6e71ljp8"]
+[gd_scene load_steps=32 format=3 uid="uid://byj6h6e71ljp8"]
 
 [ext_resource type="Script" path="res://Scripts/UIScripts/UI.gd" id="1_t0okx"]
 [ext_resource type="Texture2D" uid="uid://c31qy3sc330b7" path="res://Icons/ExcelIcon.png" id="2_can7x"]
 [ext_resource type="Script" path="res://Scripts/UIScripts/ParamController.gd" id="2_giuxs"]
 [ext_resource type="Script" path="res://Scripts/UIScripts/Panel.gd" id="3_2dvco"]
 [ext_resource type="Shader" path="res://Icons/Blur.gdshader" id="3_58m1o"]
-[ext_resource type="Script" path="res://Scenes/WeightsSection.gd" id="5_llfey"]
 [ext_resource type="Texture2D" uid="uid://3isgfqqc0856" path="res://Icons/CloseButtonIcon.png" id="6_0ds7y"]
 [ext_resource type="Script" path="res://Scenes/MapSection.gd" id="6_o1ed0"]
-[ext_resource type="Script" path="res://Scenes/GeneticOperatorsSection.gd" id="7_sdfvu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_os2d3"]
 
@@ -84,9 +82,9 @@ shadow_offset = Vector2(-2, 2)
 shader = ExtResource("3_58m1o")
 shader_parameter/lod = 0.855
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_snm3v"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sjxht"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xxfbi"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qgq5t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dektk"]
 bg_color = Color(0.172549, 0.172549, 0.172549, 1)
@@ -110,10 +108,6 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_detail = 20
 anti_aliasing_size = 0.1
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mf6do"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m7gbr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shlle"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -195,7 +189,7 @@ offset_right = 193.0
 offset_bottom = 73.0
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center] Best solution at generation"
+text = "[center]Soluzione migliore alla generazione"
 
 [node name="Label2" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
@@ -212,20 +206,19 @@ tab_size = 1
 
 [node name="Label3" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
-offset_left = 58.0
-offset_top = 110.0
-offset_right = 105.0
-offset_bottom = 130.0
+offset_left = 42.0
+offset_top = 106.0
+offset_right = 138.0
+offset_bottom = 126.0
 theme_override_font_sizes/normal_font_size = 13
-bbcode_enabled = true
-text = "[center]score"
+text = "con punteggio"
 
 [node name="Label4" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
-offset_left = 106.0
-offset_top = 107.0
-offset_right = 149.0
-offset_bottom = 131.0
+offset_left = 138.0
+offset_top = 103.0
+offset_right = 216.0
+offset_bottom = 127.0
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 text = "0"
@@ -240,7 +233,7 @@ offset_right = 193.0
 offset_bottom = 177.0
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center]Path length"
+text = "[center]Lunghezza del percorso"
 
 [node name="Label6" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
@@ -262,7 +255,7 @@ offset_right = 194.0
 offset_bottom = 242.0
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center] Corners number"
+text = "[center]Numero di curve"
 
 [node name="Label8" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
@@ -284,7 +277,7 @@ offset_right = 193.0
 offset_bottom = 309.0
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center] Obstacles number"
+text = "[center]Numero di ostacoli"
 
 [node name="Label10" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
@@ -306,14 +299,14 @@ offset_right = 193.0
 offset_bottom = 370.0
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center]Execution time"
+text = "[center]Tempo di esecuzione"
 
 [node name="Label11" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
 offset_left = 7.0
-offset_top = 381.0
+offset_top = 382.0
 offset_right = 53.0
-offset_bottom = 425.0
+offset_bottom = 426.0
 scale = Vector2(0.4, 0.4)
 bbcode_enabled = true
 text = "[img]res://Icons/timeIcon.png[/img]
@@ -399,39 +392,23 @@ z_index = -1
 material = SubResource("ShaderMaterial_tsrs5")
 layout_mode = 0
 offset_left = -398.0
-offset_top = -82.0
+offset_top = -23.0
 offset_right = 754.0
-offset_bottom = 566.0
-
-[node name="HSeparator" type="HSeparator" parent="Panel"]
-layout_mode = 0
-offset_left = 134.0
-offset_top = 126.0
-offset_right = 218.0
-offset_bottom = 130.0
+offset_bottom = 625.0
 
 [node name="WeightsSection" type="Control" parent="Panel"]
+visible = false
 anchors_preset = 0
 offset_top = 46.0
 offset_right = 40.0
 offset_bottom = 86.0
-script = ExtResource("5_llfey")
-
-[node name="SectionName" type="RichTextLabel" parent="Panel/WeightsSection"]
-layout_mode = 0
-offset_left = 121.0
-offset_top = 61.0
-offset_right = 249.0
-offset_bottom = 86.0
-theme_override_font_sizes/normal_font_size = 14
-text = "Weights settings"
 
 [node name="CornerWeight" type="Control" parent="Panel/WeightsSection"]
 anchors_preset = 0
-offset_left = 72.0
-offset_top = 144.0
-offset_right = 112.0
-offset_bottom = 184.0
+offset_left = 60.0
+offset_top = 118.0
+offset_right = 100.0
+offset_bottom = 158.0
 script = ExtResource("2_giuxs")
 
 [node name="Label" type="RichTextLabel" parent="Panel/WeightsSection/CornerWeight"]
@@ -441,12 +418,15 @@ offset_right = 200.0
 offset_bottom = -1.0
 text = "Corner weights"
 
-[node name="CornerWeightText" type="RichTextLabel" parent="Panel/WeightsSection/CornerWeight"]
+[node name="TextEdit" type="TextEdit" parent="Panel/WeightsSection/CornerWeight"]
 layout_mode = 0
-offset_left = 212.0
-offset_top = -8.0
-offset_right = 260.0
-offset_bottom = 20.0
+offset_left = 216.0
+offset_top = -18.0
+offset_right = 296.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
 text = "1"
 
 [node name="Slider" type="HSlider" parent="Panel/WeightsSection/CornerWeight"]
@@ -458,10 +438,10 @@ value = 1.0
 
 [node name="ObstacleWeight" type="Control" parent="Panel/WeightsSection"]
 anchors_preset = 0
-offset_left = 72.0
-offset_top = 209.0
-offset_right = 112.0
-offset_bottom = 249.0
+offset_left = 60.0
+offset_top = 183.0
+offset_right = 100.0
+offset_bottom = 223.0
 script = ExtResource("2_giuxs")
 
 [node name="Label" type="RichTextLabel" parent="Panel/WeightsSection/ObstacleWeight"]
@@ -471,12 +451,15 @@ offset_right = 200.0
 offset_bottom = -1.0
 text = "Obstacles weights"
 
-[node name="ObstacleWeightText" type="RichTextLabel" parent="Panel/WeightsSection/ObstacleWeight"]
+[node name="TextEdit" type="TextEdit" parent="Panel/WeightsSection/ObstacleWeight"]
 layout_mode = 0
-offset_left = 212.0
-offset_top = -8.0
-offset_right = 260.0
-offset_bottom = 20.0
+offset_left = 216.0
+offset_top = -18.0
+offset_right = 296.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
 text = "1"
 
 [node name="Slider" type="HSlider" parent="Panel/WeightsSection/ObstacleWeight"]
@@ -488,10 +471,10 @@ value = 1.0
 
 [node name="PathWeight" type="Control" parent="Panel/WeightsSection"]
 anchors_preset = 0
-offset_left = 72.0
-offset_top = 273.0
-offset_right = 112.0
-offset_bottom = 313.0
+offset_left = 60.0
+offset_top = 247.0
+offset_right = 100.0
+offset_bottom = 287.0
 script = ExtResource("2_giuxs")
 
 [node name="Label" type="RichTextLabel" parent="Panel/WeightsSection/PathWeight"]
@@ -501,12 +484,15 @@ offset_right = 200.0
 offset_bottom = -1.0
 text = "Path weights"
 
-[node name="PathWeightText" type="RichTextLabel" parent="Panel/WeightsSection/PathWeight"]
+[node name="TextEdit" type="TextEdit" parent="Panel/WeightsSection/PathWeight"]
 layout_mode = 0
-offset_left = 212.0
-offset_top = -8.0
-offset_right = 260.0
-offset_bottom = 20.0
+offset_left = 216.0
+offset_top = -18.0
+offset_right = 296.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
 text = "1"
 
 [node name="Slider" type="HSlider" parent="Panel/WeightsSection/PathWeight"]
@@ -517,269 +503,232 @@ min_value = 1.0
 value = 1.0
 
 [node name="MapSection" type="Control" parent="Panel"]
-visible = false
 anchors_preset = 0
 offset_top = 46.0
 offset_right = 40.0
 offset_bottom = 86.0
 script = ExtResource("6_o1ed0")
 
-[node name="SectionName" type="RichTextLabel" parent="Panel/MapSection"]
-layout_mode = 0
-offset_left = 132.0
-offset_top = 61.0
-offset_right = 225.0
-offset_bottom = 86.0
-theme_override_font_sizes/normal_font_size = 14
-text = "Map settings"
-
 [node name="Label" type="RichTextLabel" parent="Panel/MapSection"]
 layout_mode = 0
 offset_left = 60.0
-offset_top = 108.0
+offset_top = 92.0
 offset_right = 260.0
-offset_bottom = 133.0
+offset_bottom = 117.0
 text = "Map size"
 
-[node name="MapSizeLineEdit" type="LineEdit" parent="Panel/MapSection"]
+[node name="MapSize" type="TextEdit" parent="Panel/MapSection"]
 layout_mode = 0
-offset_left = 260.0
-offset_top = 106.0
-offset_right = 327.063
-offset_bottom = 137.0
-alignment = 1
-max_length = 2
+offset_left = 276.0
+offset_top = 84.0
+offset_right = 326.0
+offset_bottom = 118.0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
+placeholder_text = "10"
 
 [node name="Label2" type="RichTextLabel" parent="Panel/MapSection"]
 layout_mode = 0
 offset_left = 60.0
-offset_top = 145.0
+offset_top = 125.0
 offset_right = 260.0
-offset_bottom = 170.0
+offset_bottom = 150.0
 text = "Population size"
 
-[node name="PopSizeLineEdit" type="LineEdit" parent="Panel/MapSection"]
+[node name="PopulationSize" type="TextEdit" parent="Panel/MapSection"]
 layout_mode = 0
-offset_left = 260.0
-offset_top = 143.0
-offset_right = 327.063
-offset_bottom = 174.0
-alignment = 1
-max_length = 3
+offset_left = 276.0
+offset_top = 118.0
+offset_right = 326.0
+offset_bottom = 152.0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
+placeholder_text = "30"
 
 [node name="Label3" type="RichTextLabel" parent="Panel/MapSection"]
 layout_mode = 0
 offset_left = 60.0
-offset_top = 183.0
+offset_top = 159.0
 offset_right = 260.0
-offset_bottom = 208.0
+offset_bottom = 184.0
 text = "Generation limit"
 
-[node name="GenerationLimitLineEdit" type="LineEdit" parent="Panel/MapSection"]
+[node name="GenerationLimit" type="TextEdit" parent="Panel/MapSection"]
 layout_mode = 0
-offset_left = 260.0
-offset_top = 180.0
-offset_right = 327.063
-offset_bottom = 211.0
-alignment = 1
-max_length = 3
+offset_left = 276.0
+offset_top = 152.0
+offset_right = 326.0
+offset_bottom = 186.0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
+placeholder_text = "30"
 
 [node name="Label7" type="RichTextLabel" parent="Panel/MapSection"]
 layout_mode = 0
 offset_left = 59.0
-offset_top = 220.0
+offset_top = 193.0
 offset_right = 259.0
-offset_bottom = 245.0
+offset_bottom = 218.0
 text = "Knight pieces"
 
-[node name="KnightPiecesLineEdit" type="LineEdit" parent="Panel/MapSection"]
+[node name="KnightPieces" type="TextEdit" parent="Panel/MapSection"]
 layout_mode = 0
-offset_left = 260.0
-offset_top = 216.0
-offset_right = 327.063
-offset_bottom = 247.0
-alignment = 1
-max_length = 2
+offset_left = 275.0
+offset_top = 186.0
+offset_right = 325.0
+offset_bottom = 220.0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sjxht")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qgq5t")
+placeholder_text = "30"
 
 [node name="Label6" type="RichTextLabel" parent="Panel/MapSection"]
 layout_mode = 0
 offset_left = 59.0
-offset_top = 259.0
+offset_top = 255.0
 offset_right = 259.0
-offset_bottom = 284.0
-text = "Random start and exit"
+offset_bottom = 280.0
+text = "Random edge position"
 
 [node name="CheckBox" type="CheckBox" parent="Panel/MapSection"]
 layout_mode = 0
-offset_left = 282.0
-offset_top = 259.0
-offset_right = 306.0
-offset_bottom = 283.0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_snm3v")
+offset_left = 275.0
+offset_top = 256.0
+offset_right = 299.0
+offset_bottom = 280.0
 
 [node name="PositionEdgeContainer" type="Control" parent="Panel/MapSection"]
 anchors_preset = 0
-offset_left = 46.0
-offset_top = 125.0
-offset_right = 86.0
-offset_bottom = 165.0
-
-[node name="HSeparator" type="HSeparator" parent="Panel/MapSection/PositionEdgeContainer"]
-layout_mode = 0
-offset_left = 19.0
-offset_top = 170.0
-offset_right = 245.0
-offset_bottom = 174.0
+offset_left = 60.0
+offset_top = 118.0
+offset_right = 100.0
+offset_bottom = 158.0
 
 [node name="Label4" type="RichTextLabel" parent="Panel/MapSection/PositionEdgeContainer"]
 layout_mode = 0
 offset_left = -1.0
-offset_top = 191.0
+offset_top = 187.0
 offset_right = 199.0
-offset_bottom = 216.0
+offset_bottom = 212.0
 text = "Start position edge"
 
-[node name="StartEdgeOption" type="OptionButton" parent="Panel/MapSection/PositionEdgeContainer"]
+[node name="OptionButton" type="OptionButton" parent="Panel/MapSection/PositionEdgeContainer"]
 layout_mode = 0
 offset_left = 174.0
-offset_top = 187.0
+offset_top = 183.0
 offset_right = 278.0
-offset_bottom = 218.0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_xxfbi")
-item_count = 5
+offset_bottom = 214.0
+item_count = 4
 selected = 0
-popup/item_0/text = "None"
+popup/item_0/text = "Left"
 popup/item_0/id = 0
-popup/item_1/text = "Left"
+popup/item_1/text = "Right"
 popup/item_1/id = 1
-popup/item_2/text = "Right"
+popup/item_2/text = "Top"
 popup/item_2/id = 2
-popup/item_3/text = "Up"
+popup/item_3/text = "Bottom"
 popup/item_3/id = 3
-popup/item_4/text = "Down"
-popup/item_4/id = 4
 
 [node name="Label5" type="RichTextLabel" parent="Panel/MapSection/PositionEdgeContainer"]
 layout_mode = 0
 offset_left = -1.0
-offset_top = 230.0
+offset_top = 226.0
 offset_right = 199.0
-offset_bottom = 255.0
+offset_bottom = 251.0
 text = "Exit position edge"
 
-[node name="ExitEdgeOption" type="OptionButton" parent="Panel/MapSection/PositionEdgeContainer"]
+[node name="OptionButton3" type="OptionButton" parent="Panel/MapSection/PositionEdgeContainer"]
 layout_mode = 0
 offset_left = 174.0
-offset_top = 228.0
+offset_top = 224.0
 offset_right = 278.0
-offset_bottom = 259.0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_xxfbi")
-item_count = 5
+offset_bottom = 255.0
+item_count = 4
 selected = 0
-popup/item_0/text = "None"
+popup/item_0/text = "Left"
 popup/item_0/id = 0
-popup/item_1/text = "Left"
+popup/item_1/text = "Right"
 popup/item_1/id = 1
-popup/item_2/text = "Right"
+popup/item_2/text = "Top"
 popup/item_2/id = 2
-popup/item_3/text = "Up"
+popup/item_3/text = "Bottom"
 popup/item_3/id = 3
-popup/item_4/text = "Down"
-popup/item_4/id = 4
+
+[node name="HSeparator" type="HSeparator" parent="Panel/MapSection"]
+layout_mode = 0
+offset_left = 65.0
+offset_top = 240.0
+offset_right = 291.0
+offset_bottom = 244.0
 
 [node name="GeneticOperatorsSection" type="Control" parent="Panel"]
 visible = false
 anchors_preset = 0
 offset_left = 25.0
-offset_top = 34.0
 offset_right = 65.0
-offset_bottom = 74.0
-script = ExtResource("7_sdfvu")
-
-[node name="SectionName" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
-layout_mode = 0
-offset_left = 85.0
-offset_top = 73.0
-offset_right = 224.0
-offset_bottom = 98.0
-theme_override_font_sizes/normal_font_size = 14
-text = "Operators settings"
+offset_bottom = 40.0
 
 [node name="SelectionLabel" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
-layout_mode = 0
-offset_left = 54.0
-offset_top = 126.0
-offset_right = 254.0
-offset_bottom = 151.0
+offset_left = 51.0
+offset_top = 138.0
+offset_right = 251.0
+offset_bottom = 163.0
 text = "Selection"
 
 [node name="SelectionOption" type="OptionButton" parent="Panel/GeneticOperatorsSection"]
 layout_mode = 0
-offset_left = 54.0
-offset_top = 156.0
-offset_right = 254.0
-offset_bottom = 187.0
-item_count = 2
-selected = 0
-popup/item_0/text = "Roulette wheel"
-popup/item_0/id = 0
-popup/item_1/text = "Truncation"
-popup/item_1/id = 1
-
-[node name="CrossoverLabel" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
-layout_mode = 0
-offset_left = 54.0
-offset_top = 210.0
-offset_right = 254.0
-offset_bottom = 235.0
-text = "Crossover"
-
-[node name="CrossoverOption" type="OptionButton" parent="Panel/GeneticOperatorsSection"]
-layout_mode = 0
-offset_left = 54.0
-offset_top = 238.0
-offset_right = 254.0
-offset_bottom = 269.0
-item_count = 4
-selected = 0
-popup/item_0/text = "Single point"
-popup/item_0/id = 0
-popup/item_1/text = "Uniform"
-popup/item_1/id = 1
-popup/item_2/text = "Heuristic"
-popup/item_2/id = 2
-popup/item_3/text = "BlockSwap"
-popup/item_3/id = 3
-
-[node name="MutationLabel" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
-layout_mode = 0
-offset_left = 54.0
-offset_top = 298.0
-offset_right = 254.0
-offset_bottom = 323.0
-text = "Mutation"
-
-[node name="MutationOption" type="OptionButton" parent="Panel/GeneticOperatorsSection"]
-layout_mode = 0
-offset_left = 54.0
-offset_top = 326.0
-offset_right = 258.0
-offset_bottom = 357.0
-item_count = 3
+offset_left = 51.0
+offset_top = 166.0
+offset_right = 251.0
+offset_bottom = 197.0
+item_count = 1
 selected = 0
 popup/item_0/text = "Bitflip"
 popup/item_0/id = 0
-popup/item_1/text = "Block"
-popup/item_1/id = 1
-popup/item_2/text = "Simulated annealing"
-popup/item_2/id = 2
+
+[node name="CrossoverLabel" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
+offset_left = 51.0
+offset_top = 220.0
+offset_right = 251.0
+offset_bottom = 245.0
+text = "Crossover"
+
+[node name="CrossoverOption" type="OptionButton" parent="Panel/GeneticOperatorsSection"]
+offset_left = 51.0
+offset_top = 248.0
+offset_right = 251.0
+offset_bottom = 279.0
+item_count = 1
+selected = 0
+popup/item_0/text = "Bitflip"
+popup/item_0/id = 0
+
+[node name="MutationLabel" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
+offset_left = 51.0
+offset_top = 308.0
+offset_right = 251.0
+offset_bottom = 333.0
+text = "Mutation"
+
+[node name="MutationOption" type="OptionButton" parent="Panel/GeneticOperatorsSection"]
+offset_left = 51.0
+offset_top = 336.0
+offset_right = 251.0
+offset_bottom = 367.0
+item_count = 1
+selected = 0
+popup/item_0/text = "Bitflip"
+popup/item_0/id = 0
 
 [node name="WeightsButton" type="Button" parent="Panel"]
 z_index = 2
 layout_mode = 0
-offset_left = 29.0
+offset_left = 22.0
 offset_top = 64.0
-offset_right = 129.0
+offset_right = 122.0
 offset_bottom = 94.0
 mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 12
@@ -791,9 +740,9 @@ text = "Weights"
 [node name="MapButton" type="Button" parent="Panel"]
 z_index = 2
 layout_mode = 0
-offset_left = 129.0
+offset_left = 122.0
 offset_top = 64.0
-offset_right = 229.0
+offset_right = 222.0
 offset_bottom = 94.0
 mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 12
@@ -805,22 +754,22 @@ text = "Map"
 [node name="OperatorsButton" type="Button" parent="Panel"]
 z_index = 2
 layout_mode = 0
-offset_left = 229.0
+offset_left = 222.0
 offset_top = 64.0
-offset_right = 329.0
+offset_right = 322.0
 offset_bottom = 94.0
 mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_18y6a")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_mf6do")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_m7gbr")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_r3t7p")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_7h23d")
 text = "Operators"
 
 [node name="CloseButton" type="Button" parent="Panel"]
 layout_mode = 0
-offset_left = 317.0
+offset_left = 287.0
 offset_top = 22.0
-offset_right = 340.0
+offset_right = 310.0
 offset_bottom = 47.0
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_shlle")
@@ -837,8 +786,14 @@ expand_icon = true
 [connection signal="pressed" from="ChangeParamsButton" to="Panel" method="_on_change_params_button_pressed"]
 [connection signal="pressed" from="GenerateMapButton" to="." method="_on_generate_map_button_pressed"]
 [connection signal="pressed" from="GenerateMapButton" to="Panel" method="_on_generate_map_button_pressed"]
+[connection signal="text_changed" from="Panel/WeightsSection/CornerWeight/TextEdit" to="Panel/WeightsSection/CornerWeight" method="_on_text_edit_text_changed"]
+[connection signal="text_set" from="Panel/WeightsSection/CornerWeight/TextEdit" to="Panel/WeightsSection/CornerWeight" method="_on_text_edit_text_set"]
 [connection signal="value_changed" from="Panel/WeightsSection/CornerWeight/Slider" to="Panel/WeightsSection/CornerWeight" method="_on_slider_value_changed"]
+[connection signal="text_changed" from="Panel/WeightsSection/ObstacleWeight/TextEdit" to="Panel/WeightsSection/ObstacleWeight" method="_on_text_edit_text_changed"]
+[connection signal="text_set" from="Panel/WeightsSection/ObstacleWeight/TextEdit" to="Panel/WeightsSection/ObstacleWeight" method="_on_text_edit_text_set"]
 [connection signal="value_changed" from="Panel/WeightsSection/ObstacleWeight/Slider" to="Panel/WeightsSection/ObstacleWeight" method="_on_slider_value_changed"]
+[connection signal="text_changed" from="Panel/WeightsSection/PathWeight/TextEdit" to="Panel/WeightsSection/PathWeight" method="_on_text_edit_text_changed"]
+[connection signal="text_set" from="Panel/WeightsSection/PathWeight/TextEdit" to="Panel/WeightsSection/PathWeight" method="_on_text_edit_text_set"]
 [connection signal="value_changed" from="Panel/WeightsSection/PathWeight/Slider" to="Panel/WeightsSection/PathWeight" method="_on_slider_value_changed"]
 [connection signal="toggled" from="Panel/MapSection/CheckBox" to="Panel/MapSection" method="_on_check_box_toggled"]
 [connection signal="pressed" from="Panel/WeightsButton" to="Panel" method="_on_weights_button_pressed"]

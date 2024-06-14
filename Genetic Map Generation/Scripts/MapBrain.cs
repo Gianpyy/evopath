@@ -83,6 +83,8 @@ public partial class MapBrain : Node
 	{
 		
 		ResetAlgorithm();
+		
+		GetParametersFromUI();
 
 		grid = new Map(mapWidth, mapHeight);
 
@@ -133,24 +135,9 @@ public partial class MapBrain : Node
 		GeneticAlgorithm();
 	}
 
-	// Ottiene i parametri impostati dall'UI con gli slider per impostarli nell'algoritmo genetico
-	private void GetParametersFromUI()
-	{
-
-		Slider obstacleWeightsSlider = GetNode<Slider>("Ui/Panel/ObstacleWeight/Slider");
-		Slider cornerWeightSlider = GetNode<Slider>("Ui/Panel/CornerWeight/Slider");
-		Slider pathWeightSlider = GetNode<Slider>("Ui/Panel/PathWeight/Slider");
-		
-		fitnessObstacleWeight = (float)obstacleWeightsSlider.Value;
-		fitnessCornerWeight = (float)cornerWeightSlider.Value;
-		fitnessPathWeight = (float)pathWeightSlider.Value;
-	}
-
 	// Algoritmo genetico per trovare la miglior generazione
 	private void GeneticAlgorithm()
 	{
-
-		GetParametersFromUI();
 
 		totalFitnessThisGeneration = 0;
 		float bestFitnessScoreThisGeneration = 0;
@@ -313,6 +300,17 @@ public partial class MapBrain : Node
 		mapVisualizer.GenerateMap(bestMap.Grid, bestMap.Path);
 		bestMap.Grid.PrintMapConsole();
 
+
+		GD.Print("Soluzione migliore alla generazione "+bestMapGenerationNumber+" con il punteggio: "+bestFitnessScoreAllTime);
+		GD.Print("Lunghezza del percorso: "+bestMap.Path.Count);
+		GD.Print("Numero di curve: "+bestMap.CornersList.Count);
+		GD.Print("Numero di ostacoli: "+bestMap.Obstacles.Count(isObstacle => isObstacle));
+
+		endDate = DateTime.Now;
+		long elapsedTicks = endDate.Ticks - startDate.Ticks;
+		TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
+		GD.Print("Tempo di esecuzione "+elapsedSpan);
+
 		Panel dataList = GetNode<Panel>("/root/MapGenerator/Ui/ShowDataButton/Panel");
 		RichTextLabel childNode = (RichTextLabel)dataList.GetChild(1);
         childNode.Text = "[center]"+bestMapGenerationNumber.ToString();
@@ -327,17 +325,9 @@ public partial class MapBrain : Node
 
 		childNode = (RichTextLabel)dataList.GetChild(9);
         childNode.Text = "[center]"+bestMap.Obstacles.Count(isObstacle => isObstacle).ToString();
-    
 
-		GD.Print("Soluzione migliore alla generazione "+bestMapGenerationNumber+" con il punteggio: "+bestFitnessScoreAllTime);
-		GD.Print("Lunghezza del percorso: "+bestMap.Path.Count);
-		GD.Print("Numero di curve: "+bestMap.CornersList.Count);
-		GD.Print("Numero di ostacoli: "+bestMap.Obstacles.Count(isObstacle => isObstacle));
-
-		endDate = DateTime.Now;
-		long elapsedTicks = endDate.Ticks - startDate.Ticks;
-		TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
-		GD.Print("Tempo di esecuzione "+elapsedSpan);
+		childNode = (RichTextLabel)dataList.GetChild(12);
+        childNode.Text = "[center]"+elapsedSpan.ToString();
 
 		geneticAlgorithmData.elapsedTime = elapsedSpan;
 		geneticAlgorithmData.bestMapFitness = CalculateFitness(bestMap);
@@ -720,6 +710,74 @@ public partial class MapBrain : Node
         }
     }
 
+	
+	// Ottiene i parametri impostati dall'UI con gli slider per impostarli nell'algoritmo genetico
+	private void GetParametersFromUI()
+	{
+
+		// Weights Section
+		Slider obstacleWeightsSlider = GetNode<Slider>("Ui/Panel/WeightsSection/ObstacleWeight/Slider");
+		Slider cornerWeightSlider = GetNode<Slider>("Ui/Panel/WeightsSection/CornerWeight/Slider");
+		Slider pathWeightSlider = GetNode<Slider>("Ui/Panel/WeightsSection/PathWeight/Slider");
+		
+		fitnessObstacleWeight = (float)obstacleWeightsSlider.Value;
+		fitnessCornerWeight = (float)cornerWeightSlider.Value;
+		fitnessPathWeight = (float)pathWeightSlider.Value;
+
+		// Map Section
+		LineEdit mapSize = GetNode<LineEdit>("Ui/Panel/MapSection/MapSizeLineEdit");
+		LineEdit populationSize = GetNode<LineEdit>("Ui/Panel/MapSection/PopSizeLineEdit");
+		LineEdit generationLimit = GetNode<LineEdit>("Ui/Panel/MapSection/GenerationLimitLineEdit");
+		LineEdit knightPieces = GetNode<LineEdit>("Ui/Panel/MapSection/KnightPiecesLineEdit");
+		CheckBox randomEdge = GetNode<CheckBox>("Ui/Panel/MapSection/CheckBox");
+		OptionButton startEdge = GetNode<OptionButton>("Ui/Panel/MapSection/PositionEdgeContainer/StartEdgeOption");
+		OptionButton exitEdge = GetNode<OptionButton>("Ui/Panel/MapSection/PositionEdgeContainer/ExitEdgeOption");
+
+		int lineEditOutput;
+		int.TryParse(mapSize.Text, out lineEditOutput);
+		 
+		if(lineEditOutput > 0)
+		{
+			mapHeight = lineEditOutput;
+			mapWidth = lineEditOutput;
+
+			Camera3D camera = GetNode<Camera3D>("/root/MapGenerator/Camera3D");
+			camera.Call("TopViewCamera");
+
+		}
+
+		int.TryParse(populationSize.Text, out lineEditOutput);
+		if(lineEditOutput > 0)
+			this.populationSize = lineEditOutput;
+
+		int.TryParse(generationLimit.Text, out lineEditOutput);
+		if(lineEditOutput > 0)
+			this.generationLimit = lineEditOutput;
+
+		int.TryParse(knightPieces.Text, out lineEditOutput);
+		if(lineEditOutput > 0)
+			numberOfKnightPieces = lineEditOutput;
+		
+
+		randomStartAndEnd = randomEdge.ButtonPressed;
+		if(!randomStartAndEnd)
+		{
+			startPositionEdge = (Direction)startEdge.Selected;
+			exitPositionEdge = (Direction)exitEdge.Selected;
+			
+		}
+
+		// GA Operators
+		OptionButton selectionOption = GetNode<OptionButton>("Ui/Panel/GeneticOperatorsSection/SelectionOption");
+		OptionButton crossoverOption = GetNode<OptionButton>("Ui/Panel/GeneticOperatorsSection/CrossoverOption");
+		OptionButton mutationOption = GetNode<OptionButton>("Ui/Panel/GeneticOperatorsSection/MutationOption");
+
+		selectionMethod = (Selection) selectionOption.Selected;
+		crossoverMethod = (Crossover) crossoverOption.Selected;
+		mutationMethod = (Mutation) mutationOption.Selected;
+		
+	}
+
 	public void WriteDataToExcel()
 	{
 		GD.Print("-------------------------------------------------");
@@ -751,11 +809,6 @@ public partial class MapBrain : Node
 	public override void _Ready()
 	{
 		RunAlgorithm();
-		//WriteDataToExcel();
-		//grid = new Map(mapWidth, mapHeight);
-
-		//CandidateMap emptyCandidateMap = new CandidateMap(grid,0);
-		//mapVisualizer.GenerateMap(emptyCandidateMap.grid,emptyCandidateMap.Path);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
