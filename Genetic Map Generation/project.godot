@@ -10,10 +10,15 @@ config_version=5
 
 [application]
 
-config/name="Genetic Map Generation"
+config/name="Evopath"
 run/main_scene="res://Scenes/Map.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/stretch/mode="canvas_items"
+window/vsync/vsync_mode=0
 
 [dotnet]
 
@@ -28,4 +33,5 @@ folder_colors={
 
 [rendering]
 
+textures/vram_compression/import_etc2_astc=true
 2d/snap/snap_2d_vertices_to_pixel=true

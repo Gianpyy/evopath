@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 public partial class MapBrain : Node
 {
@@ -79,12 +80,16 @@ public partial class MapBrain : Node
     /// <summary>
     /// Avvia l'algoritmo
     /// </summary>
-    public void RunAlgorithm()
+
+    public async void RunAlgorithm()
 	{
-		
+	
 		ResetAlgorithm();
+
+		await StartLoadingScreen();
 		
 		GetParametersFromUI();
+		
 
 		grid = new Map(mapWidth, mapHeight);
 
@@ -94,6 +99,7 @@ public partial class MapBrain : Node
 
 		startDate = DateTime.Now;
 
+		await StartLoadingScreen();
 		FindOptimalSolution(grid);
 	}
 
@@ -138,6 +144,7 @@ public partial class MapBrain : Node
 	// Algoritmo genetico per trovare la miglior generazione
 	private void GeneticAlgorithm()
 	{
+		endDate = DateTime.Now;
 
 		totalFitnessThisGeneration = 0;
 		float bestFitnessScoreThisGeneration = 0;
@@ -287,17 +294,24 @@ public partial class MapBrain : Node
 		else
 		{
 			ShowResults();
+			
+			
 		}
+			
 	}
 
 	private void ShowResults()
     {
         isAlgorithmRunning = false;
 
+		RemoveLoadingScreen();
+		
 		bestMap.RebuildGrid();
 
 		GD.Print("Miglior mappa: ");
+
 		mapVisualizer.GenerateMap(bestMap.Grid, bestMap.Path);
+
 		bestMap.Grid.PrintMapConsole();
 
 
@@ -711,6 +725,20 @@ public partial class MapBrain : Node
     }
 
 	
+	private async Task StartLoadingScreen()
+	{
+		Control loading = GetNode<Control>("/root/MapGenerator/Ui/LoadingScreen");
+		loading.Visible = true;
+		await Task.Delay(1);
+	}
+
+	private void RemoveLoadingScreen()
+	{
+		Control loading = GetNode<Control>("/root/MapGenerator/Ui/LoadingScreen");
+		loading.Visible = false;
+	}
+
+	
 	// Ottiene i parametri impostati dall'UI con gli slider per impostarli nell'algoritmo genetico
 	private void GetParametersFromUI()
 	{
@@ -778,13 +806,18 @@ public partial class MapBrain : Node
 		
 	}
 
-	public void WriteDataToExcel()
+	
+	public async void WriteDataToExcel()
 	{
+
+		await StartDisableExport();
+
 		GD.Print("-------------------------------------------------");
 		GD.Print("Salvataggio dei dati in Excel...");
 		DataAnalysis da = new DataAnalysis();
 
-		da.WriteDataInSheet(geneticAlgorithmData, new GeneticAlgorithmConfiguration{
+
+		int result = da.WriteDataInSheet(geneticAlgorithmData, new GeneticAlgorithmConfiguration{
 			populationSize = this.populationSize,
 			generationLimit = this.generationLimit,
 			crossverRate = this.crossoverRate,
@@ -802,8 +835,38 @@ public partial class MapBrain : Node
 			crossoverMethod = this.crossoverMethod,
 			mutationMethod = this.mutationMethod,
 		});
+
+		DisableExport(result);
+
+		
 	}
 
+	private async Task StartDisableExport()
+	{
+		Button exportDataButton = GetNode<Button>("/root/MapGenerator/Ui/DataToExcelButton");
+		exportDataButton.Text = "Exporting...";
+		exportDataButton.Disabled = true;
+		await Task.Delay(1);
+	}
+
+	private async void DisableExport(int result)
+	{
+		Button exportDataButton = GetNode<Button>("/root/MapGenerator/Ui/DataToExcelButton");
+		exportDataButton.Disabled = false;
+		exportDataButton.Text = "Export data";	
+
+		Panel notify = GetNode<Panel>("/root/MapGenerator/Ui/ExportNotify");
+		notify.Visible = true;
+
+		if(result > 0)
+			notify.GetNode<RichTextLabel>("Label").Text = "Data exported to sheet "+result.ToString();
+		else
+			notify.GetNode<RichTextLabel>("Label").Text = "Error exporting data";
+		
+		
+		await Task.Delay(1000);
+		notify.Visible = false;
+	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

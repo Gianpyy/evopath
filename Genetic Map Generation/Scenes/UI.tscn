@@ -1,14 +1,14 @@
-[gd_scene load_steps=36 format=3 uid="uid://byj6h6e71ljp8"]
+[gd_scene load_steps=38 format=3 uid="uid://byj6h6e71ljp8"]
 
 [ext_resource type="Script" path="res://Scripts/UIScripts/UI.gd" id="1_t0okx"]
 [ext_resource type="Texture2D" uid="uid://c31qy3sc330b7" path="res://Icons/ExcelIcon.png" id="2_can7x"]
 [ext_resource type="Script" path="res://Scripts/UIScripts/ParamController.gd" id="2_giuxs"]
 [ext_resource type="Script" path="res://Scripts/UIScripts/Panel.gd" id="3_2dvco"]
 [ext_resource type="Shader" path="res://Icons/Blur.gdshader" id="3_58m1o"]
-[ext_resource type="Script" path="res://Scenes/WeightsSection.gd" id="5_llfey"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/WeightsSection.gd" id="5_llfey"]
 [ext_resource type="Texture2D" uid="uid://3isgfqqc0856" path="res://Icons/CloseButtonIcon.png" id="6_0ds7y"]
-[ext_resource type="Script" path="res://Scenes/MapSection.gd" id="6_o1ed0"]
-[ext_resource type="Script" path="res://Scenes/GeneticOperatorsSection.gd" id="7_sdfvu"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/MapSection.gd" id="6_o1ed0"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/GeneticOperatorsSection.gd" id="7_sdfvu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_os2d3"]
 
@@ -28,12 +28,16 @@ corner_radius_top_right = 7
 corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lcjgm"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ntyaw"]
-bg_color = Color(0.298039, 0.298039, 0.298039, 0.772549)
+bg_color = Color(0.0768358, 0.0768358, 0.0768358, 0.772549)
 corner_radius_top_left = 7
 corner_radius_top_right = 7
 corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bkary"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2jk1b"]
 bg_color = Color(0.960784, 0.545098, 0, 1)
@@ -189,11 +193,11 @@ offset_bottom = 462.0
 
 [node name="Label1" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 33.0
-offset_right = 193.0
-offset_bottom = 73.0
-theme_override_font_sizes/normal_font_size = 14
+offset_left = 7.0
+offset_top = 22.0
+offset_right = 199.0
+offset_bottom = 76.0
+theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
 text = "[center] Best solution at generation"
 
@@ -212,19 +216,19 @@ tab_size = 1
 
 [node name="Label3" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
-offset_left = 58.0
-offset_top = 110.0
-offset_right = 105.0
-offset_bottom = 130.0
-theme_override_font_sizes/normal_font_size = 13
+offset_left = 38.0
+offset_top = 107.0
+offset_right = 129.0
+offset_bottom = 146.0
+theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 text = "[center]score"
 
 [node name="Label4" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
-offset_left = 106.0
+offset_left = 110.0
 offset_top = 107.0
-offset_right = 149.0
+offset_right = 153.0
 offset_bottom = 131.0
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
@@ -349,7 +353,9 @@ mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.991164, 0.991164, 0.991164, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_lapgu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_6wd8a")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_lcjgm")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_ntyaw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bkary")
 text = "Export data"
 icon = ExtResource("2_can7x")
 expand_icon = true
@@ -383,7 +389,24 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_pst2l")
 text = "Generate map"
 script = SubResource("GDScript_nmick")
 
+[node name="ExportNotify" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_top = 539.0
+offset_right = 237.0
+offset_bottom = 579.0
+
+[node name="Label" type="RichTextLabel" parent="ExportNotify"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 245.0
+offset_bottom = 35.0
+bbcode_enabled = true
+text = "Data exported to "
+
 [node name="Panel" type="Panel" parent="."]
+visible = false
 self_modulate = Color(0.854902, 1, 1, 0.490196)
 material = SubResource("CanvasItemMaterial_fv8pw")
 layout_mode = 0
@@ -828,6 +851,30 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_3r37w")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_v828h")
 icon = ExtResource("6_0ds7y")
 expand_icon = true
+
+[node name="LoadingScreen" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Loading" type="RichTextLabel" parent="LoadingScreen"]
+layout_mode = 0
+offset_left = 511.0
+offset_top = 274.0
+offset_right = 667.0
+offset_bottom = 324.0
+theme_override_font_sizes/normal_font_size = 30
+text = "Loading..."
+
+[node name="ColorRect" type="ColorRect" parent="LoadingScreen"]
+z_index = -1
+material = SubResource("ShaderMaterial_tsrs5")
+layout_mode = 0
+offset_left = -1.0
+offset_top = 1.0
+offset_right = 1151.0
+offset_bottom = 649.0
 
 [connection signal="button_down" from="CheckButton" to="." method="_on_check_button_button_down"]
 [connection signal="button_up" from="CheckButton" to="." method="_on_check_button_button_up"]

@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cl50xvtejp0l8"
 path.s3tc="res://.godot/imported/Overworld_Land_02.png-3f0f87eaed4d352a24d3ecf1f5665d0b.s3tc.ctex"
+path.etc2="res://.godot/imported/Overworld_Land_02.png-3f0f87eaed4d352a24d3ecf1f5665d0b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Prefabs/WorldTiles/3D Overworld Tileset/tiles_land/Overworld_Land_02.png"
-dest_files=["res://.godot/imported/Overworld_Land_02.png-3f0f87eaed4d352a24d3ecf1f5665d0b.s3tc.ctex"]
+dest_files=["res://.godot/imported/Overworld_Land_02.png-3f0f87eaed4d352a24d3ecf1f5665d0b.s3tc.ctex", "res://.godot/imported/Overworld_Land_02.png-3f0f87eaed4d352a24d3ecf1f5665d0b.etc2.ctex"]
 
 [params]
 

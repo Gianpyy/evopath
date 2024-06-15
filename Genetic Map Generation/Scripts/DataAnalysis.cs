@@ -36,7 +36,7 @@ public class DataAnalysis
 	/// </summary>
 	/// <param name="fitnessArray">I valori di fitness da inserire nel foglio</param> 
     /// <param name="geneticAlgorithmConfiguration">La configurazione dell'algoritmo genetico</param>
-    public void WriteDataInSheet(GeneticAlgorithmData geneticAlgorithmData, GeneticAlgorithmConfiguration geneticAlgorithmConfiguration)
+    public int WriteDataInSheet(GeneticAlgorithmData geneticAlgorithmData, GeneticAlgorithmConfiguration geneticAlgorithmConfiguration)
     {
         // Impostazione del contesto della licenza EPPlus
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -56,6 +56,7 @@ public class DataAnalysis
 
                 string successString = "[color=green]Dati inseriti con successo in Foglio" + (worksheetIndex + 1) + ". [/color]";
                 GD.PrintRich(successString);
+                return worksheetIndex+1;
             }
             else
             {
@@ -64,13 +65,14 @@ public class DataAnalysis
                 package.Save();
 
                 string successString = "[color=green]Dati inseriti con successo in Foglio" + (worksheetIndex + 1) + ". [/color]";
-                GD.PrintRich(successString);
+                return worksheetIndex+1;
             }
         }
         catch (Exception e) when (e is IOException || e is InvalidOperationException)
         {
             string errorString = "[color=red]Impossibie scrivere in "+ file.Name + " perché il file è attualmente aperto da un'altra applicazione. Chiudere e riprovare. [/color]";
             GD.PrintRich(errorString);
+            return 0;
         }   
     }
 

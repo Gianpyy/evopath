@@ -31,11 +31,7 @@ public partial class MapVisualizer : Node3D
 
 	public override void _Process(double delta)
 	{
-		if(!isGenerating)
-		{
-			generateMapButton.Disabled = false;
-			exportDataButton.Disabled = false;
-		}
+		
 		
 	}
 
@@ -110,6 +106,8 @@ public partial class MapVisualizer : Node3D
 
 		// Creazione strada con delay
 		GenerateRoadOnDelay(map, path);
+
+		
 	
 		
 		
@@ -225,6 +223,11 @@ public partial class MapVisualizer : Node3D
 	
 
 		isGenerating = false;
+		if(!isGenerating)
+		{
+			generateMapButton.Disabled = false;
+			exportDataButton.Disabled = false;
+		}
 	}
 
 	// Aggiunge i nodi alla scena con un delay preimpostato
