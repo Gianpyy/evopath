@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://byj6h6e71ljp8"]
+[gd_scene load_steps=40 format=3 uid="uid://byj6h6e71ljp8"]
 
 [ext_resource type="Script" path="res://Scripts/UIScripts/UI.gd" id="1_t0okx"]
 [ext_resource type="Texture2D" uid="uid://c31qy3sc330b7" path="res://Icons/ExcelIcon.png" id="2_can7x"]
@@ -91,6 +91,15 @@ shader_parameter/lod = 0.855
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_snm3v"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xxfbi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pdwx3"]
+bg_color = Color(0.113725, 0.117647, 0.117647, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i46n8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dektk"]
 bg_color = Color(0.172549, 0.172549, 0.172549, 1)
@@ -216,9 +225,9 @@ tab_size = 1
 
 [node name="Label3" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
-offset_left = 38.0
+offset_left = 36.0
 offset_top = 107.0
-offset_right = 129.0
+offset_right = 127.0
 offset_bottom = 146.0
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
@@ -314,10 +323,10 @@ text = "[center]Execution time"
 
 [node name="Label11" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
-offset_left = 7.0
-offset_top = 381.0
-offset_right = 53.0
-offset_bottom = 425.0
+offset_left = 8.0
+offset_top = 372.0
+offset_right = 54.0
+offset_bottom = 416.0
 scale = Vector2(0.4, 0.4)
 bbcode_enabled = true
 text = "[img]res://Icons/timeIcon.png[/img]
@@ -331,10 +340,10 @@ tab_size = 1
 
 [node name="Label12" type="RichTextLabel" parent="ShowDataButton/Panel"]
 layout_mode = 0
-offset_left = 32.0
-offset_top = 378.0
-offset_right = 181.0
-offset_bottom = 402.0
+offset_left = 33.0
+offset_top = 369.0
+offset_right = 182.0
+offset_bottom = 393.0
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
 text = "[center]"
@@ -421,9 +430,9 @@ script = ExtResource("3_2dvco")
 z_index = -1
 material = SubResource("ShaderMaterial_tsrs5")
 layout_mode = 0
-offset_left = -398.0
+offset_left = -389.0
 offset_top = -82.0
-offset_right = 754.0
+offset_right = 763.0
 offset_bottom = 566.0
 
 [node name="HSeparator" type="HSeparator" parent="Panel"]
@@ -774,6 +783,26 @@ popup/item_2/id = 2
 popup/item_3/text = "BlockSwap"
 popup/item_3/id = 3
 
+[node name="CrossoverRate" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
+layout_mode = 0
+offset_left = 281.0
+offset_top = 219.0
+offset_right = 317.0
+offset_bottom = 244.0
+theme_override_font_sizes/normal_font_size = 15
+text = "Rate"
+
+[node name="CrossoverRateEdit" type="LineEdit" parent="Panel/GeneticOperatorsSection"]
+layout_mode = 0
+offset_left = 267.0
+offset_top = 241.0
+offset_right = 326.063
+offset_bottom = 264.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pdwx3")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_i46n8")
+alignment = 1
+max_length = 3
+
 [node name="MutationLabel" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
 layout_mode = 0
 offset_left = 54.0
@@ -797,13 +826,33 @@ popup/item_1/id = 1
 popup/item_2/text = "Simulated annealing"
 popup/item_2/id = 2
 
+[node name="MutationRate" type="RichTextLabel" parent="Panel/GeneticOperatorsSection"]
+layout_mode = 0
+offset_left = 281.0
+offset_top = 307.0
+offset_right = 317.0
+offset_bottom = 332.0
+theme_override_font_sizes/normal_font_size = 15
+text = "Rate"
+
+[node name="MutationRateEdit" type="LineEdit" parent="Panel/GeneticOperatorsSection"]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 329.0
+offset_right = 329.063
+offset_bottom = 352.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pdwx3")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_i46n8")
+alignment = 1
+max_length = 3
+
 [node name="WeightsButton" type="Button" parent="Panel"]
 z_index = 2
 layout_mode = 0
 offset_left = 29.0
-offset_top = 64.0
+offset_top = 58.0
 offset_right = 129.0
-offset_bottom = 94.0
+offset_bottom = 88.0
 mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_dektk")
@@ -815,9 +864,9 @@ text = "Weights"
 z_index = 2
 layout_mode = 0
 offset_left = 129.0
-offset_top = 64.0
+offset_top = 58.0
 offset_right = 229.0
-offset_bottom = 94.0
+offset_bottom = 88.0
 mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_f1h7i")
@@ -829,9 +878,9 @@ text = "Map"
 z_index = 2
 layout_mode = 0
 offset_left = 229.0
-offset_top = 64.0
+offset_top = 58.0
 offset_right = 329.0
-offset_bottom = 94.0
+offset_bottom = 88.0
 mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_18y6a")

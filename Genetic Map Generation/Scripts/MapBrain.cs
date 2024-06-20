@@ -325,6 +325,7 @@ public partial class MapBrain : Node
 		TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
 		GD.Print("Tempo di esecuzione "+elapsedSpan);
 
+		// Show result data to UI
 		Panel dataList = GetNode<Panel>("/root/MapGenerator/Ui/ShowDataButton/Panel");
 		RichTextLabel childNode = (RichTextLabel)dataList.GetChild(1);
         childNode.Text = "[center]"+bestMapGenerationNumber.ToString();
@@ -622,10 +623,9 @@ public partial class MapBrain : Node
 		for (int i = 0; i < candidateMap.Obstacles.Length; i++)
 		{
 			int rng = rand.Next(0, 100);
-			//GD.Print("Random number: "+rng);
+			
 			if (rng < mutationRate)
 			{
-				//GD.Print("Obstacle mutated!");
 				bool obstacleAtIndex = candidateMap.IsObstacleAt(i);
 				candidateMap.PlaceObstacle(i, !obstacleAtIndex);
 			}
@@ -800,9 +800,20 @@ public partial class MapBrain : Node
 		OptionButton crossoverOption = GetNode<OptionButton>("Ui/Panel/GeneticOperatorsSection/CrossoverOption");
 		OptionButton mutationOption = GetNode<OptionButton>("Ui/Panel/GeneticOperatorsSection/MutationOption");
 
+		LineEdit crossoverRateEdit = GetNode<LineEdit>("Ui/Panel/GeneticOperatorsSection/CrossoverRateEdit");
+		LineEdit mutationRateEdit = GetNode<LineEdit>("Ui/Panel/GeneticOperatorsSection/MutationRateEdit");
+
 		selectionMethod = (Selection) selectionOption.Selected;
 		crossoverMethod = (Crossover) crossoverOption.Selected;
 		mutationMethod = (Mutation) mutationOption.Selected;
+
+		int.TryParse(crossoverRateEdit.Text, out lineEditOutput);
+		if(lineEditOutput > 0)
+			crossoverRate = lineEditOutput;
+		
+		int.TryParse(mutationRateEdit.Text, out lineEditOutput);
+		if(lineEditOutput > 0)
+			mutationRate = lineEditOutput;
 		
 	}
 

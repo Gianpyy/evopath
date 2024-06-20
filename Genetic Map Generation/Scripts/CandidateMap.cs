@@ -59,14 +59,9 @@ public class CandidateMap
 
 		RandomlyPlaceKnightPieces(nPieces);
 		PlaceKnightObstacles();
-		//FindPath();
 		
-		//if (autoRepair) 
-		//{
-		//	Repair();
-       // }
 
-		for(int i = 0;i < obstacles.Length; i++)
+		for(int i = 0; i < obstacles.Length; i++)
 		{
 			if(obstacles[i])
 			{
@@ -74,13 +69,6 @@ public class CandidateMap
 				grid.SetCell(pos.X,pos.Y,CellObjectType.Obstacle);
 			}
 		}
-
-		
-		// GD.Print(obstacles.Count(isObstacle => isObstacle));
-
-		// Debug
-		//cornersList = GetListOfCorners(path);
-		//consecutiveCornersCount = CalculateConsecutiveCorners(cornersList);
 			
 	}
 
@@ -127,7 +115,6 @@ public class CandidateMap
 
 				obstacles[randomIndex] = true;
 				knightPiecesList.Add(new KnightPiece(coordinates));
-				//GD.Print(coordinates.X+" "+coordinates.Y);
 				count--;
 			}
 
@@ -217,9 +204,6 @@ public class CandidateMap
 				int index = grid.CalculateIndexFromCoordinates(obstaclePosition.X, obstaclePosition.Y);
                 obstacles[index] = true;
 			}
-
-			// Debug
-			//GD.Print(s);
         }
 
 		return obstaclesToRemove;
@@ -374,12 +358,6 @@ public class CandidateMap
 			}
 		}
 
-		/*	
-		foreach(KnightPiece k in knightPiecesList)
-		{
-			grid.SetCell(k.Position.X, k.Position.Y, CellObjectType.Knight);
-		}
-		*/
 	}
 
 }
