@@ -226,65 +226,73 @@ public partial class MapBrain : Node
 				CandidateMap child1 = null;
 				CandidateMap child2 = null;
 
-				switch(crossoverMethod)
+				Random rand = new Random();
+
+				if(rand.Next(0, 100) < crossoverRate)
 				{
-					case Crossover.SinglePoint:
+					switch(crossoverMethod)
+					{
+						case Crossover.SinglePoint:
 
-						SinglePointCrossover(parent1, parent2, out child1, out child2);
+							SinglePointCrossover(parent1, parent2, out child1, out child2);
 
-					break;
+						break;
 
-					case Crossover.Uniform:
+						case Crossover.Uniform:
 
-						UniformCrossover(parent1, parent2, out child1);
-						UniformCrossover(parent1, parent2, out child2);
+							UniformCrossover(parent1, parent2, out child1);
+							UniformCrossover(parent1, parent2, out child2);
+							
+						break;
+
+						case Crossover.Heuristic:
+
+							HeuristicCrossover(parent1, parent2, out child1);
+							HeuristicCrossover(parent1, parent2, out child2);
+
+						break;
+
+						case Crossover.BlockSwap:
+
+							BlockSwapCrossover(parent1, parent2, out child1, out child2);
+
+						break;
 						
-					break;
+					}	
+						
 
-					case Crossover.Heuristic:
+					// MUTATION
 
-						HeuristicCrossover(parent1, parent2, out child1);
-						HeuristicCrossover(parent1, parent2, out child2);
+					switch(mutationMethod)
+					{
+						case Mutation.BitFlip:
 
-					break;
+							BitflipMutation(child1);
+							BitflipMutation(child2);
 
-					case Crossover.BlockSwap:
+						break;
 
-						BlockSwapCrossover(parent1, parent2, out child1, out child2);
+						case Mutation.Block:
 
-					break;
-					
-				}				
+							BlockMutation(child1);
+							BlockMutation(child2);
 
-				// MUTATION
+						break;
 
-				switch(mutationMethod)
-				{
-					case Mutation.BitFlip:
+						case Mutation.SimulatedAnnealing:
 
-						BitflipMutation(child1);
-						BitflipMutation(child2);
+							SimulatedAnnealingMutation(child1);
+							SimulatedAnnealingMutation(child2);
 
-					break;
+						break;
+						
+					}
 
-					case Mutation.Block:
-
-						BlockMutation(child1);
-						BlockMutation(child2);
-
-					break;
-
-					case Mutation.SimulatedAnnealing:
-
-						SimulatedAnnealingMutation(child1);
-						SimulatedAnnealingMutation(child2);
-
-					break;
-					
+					nextGeneration.Add(child1);
+					nextGeneration.Add(child2);
 				}
 
-				nextGeneration.Add(child1);
-				nextGeneration.Add(child2);
+				
 			}
 
 			currentGeneration = nextGeneration;
@@ -294,8 +302,6 @@ public partial class MapBrain : Node
 		else
 		{
 			ShowResults();
-			
-			
 		}
 			
 	}
@@ -505,17 +511,16 @@ public partial class MapBrain : Node
 		child1 = parent1.DeepClone();
 		child2 = parent2.DeepClone();
 
-		if(rand.Next(0, 100) < crossoverRate)
-		{
-			int numBITs = parent1.Obstacles.Length;
-			int crossOverIndex = rand.Next(0, numBITs);
+		
+		int numBITs = parent1.Obstacles.Length;
+		int crossOverIndex = rand.Next(0, numBITs);
 
-			for (int i = crossOverIndex; i < numBITs; i++)
-			{
-				child1.PlaceObstacle(i , parent2.IsObstacleAt(i));
-				child2.PlaceObstacle(i, parent1.IsObstacleAt(i));
-			}
+		for (int i = crossOverIndex; i < numBITs; i++)
+		{
+			child1.PlaceObstacle(i , parent2.IsObstacleAt(i));
+			child2.PlaceObstacle(i, parent1.IsObstacleAt(i));
 		}
+		
 	}
 
 	/// <summary>
@@ -535,7 +540,7 @@ public partial class MapBrain : Node
 		for (int i = 0; i < child.Obstacles.Length; i++)
 		{
 			int randomNumber = rand.Next(0,100);
-
+	
 			if (randomNumber < 50)
 				child.PlaceObstacle(i, parent1.IsObstacleAt(i));
 			else	
@@ -612,7 +617,7 @@ public partial class MapBrain : Node
 		}
 	}
 
-	/// <summary>
+	/// <summary> 	
 	/// Applica la bitflip mutation a una mappa candidata.
 	/// </summary>
 	/// <param name="candidateMap">La mappa candidata su cui applicare la mutazione.</param>
@@ -882,7 +887,9 @@ public partial class MapBrain : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		
 		RunAlgorithm();
+		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

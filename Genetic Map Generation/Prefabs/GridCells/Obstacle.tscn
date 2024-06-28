@@ -9,6 +9,6 @@ albedo_texture = ExtResource("1_fe6tt")
 [node name="Obstacle" type="Node3D"]
 
 [node name="Obstacle1Tile" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1.25, 1.09278e-07, 0, -1.09278e-07, -1.25, 0, 0, 0, 1.25, 2, 0, 2)
+transform = Transform3D(-1.4, 1.88745e-07, 0, -2.11394e-07, -1.25, 0, 0, 0, 1.4, 2, 0, 2)
 material_override = SubResource("StandardMaterial3D_u5lfy")
 mesh = ExtResource("2_wxfun")
