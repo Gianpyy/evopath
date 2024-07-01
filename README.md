@@ -21,11 +21,13 @@ The project was developed using the [Godot Engine](https://godotengine.org/), wi
 
 Full documentation can be found here: *TBD*
 
+## Installation
 
-
+- Download the [latest release](https://github.com/Gianpyy/evopath/releases) of the project
+- Extract the files in a folder
+- Run `Evopath.exe`
 
 ## Usage
-*TBD*
 
 ### UI
 - Press <b> Generate map </b> to generate a new map.
