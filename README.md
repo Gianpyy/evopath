@@ -1,6 +1,6 @@
 
 
-# Evopath:  Genetic algorithm for maps generation
+# EvoPath:  Genetic algorithm for maps generation
 
 <img src="images/mapGif.gif" title="MapGif" width="500"/>
 
@@ -19,7 +19,7 @@ The project was developed using the [Godot Engine](https://godotengine.org/), wi
 
 ## Documentation
 
-Full documentation can be found here: *TBD*
+Read the full documentation [here](documentation/EvoPath_documentation.pdf)
 
 ## Installation
 
